@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="WH Checklist">
+<meta name="theme-color" content="#1a1a2e">
+<title>WH Opening / Closing Checklist</title>
+<style>
+:root{--navy:#1a1a2e;--teal:#00c9a7;--teal-light:#e0f7f4;--orange:#e65100;--red:#c62828;--green:#2e7d32}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{height:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f5;min-height:100vh;padding-bottom:80px;-webkit-font-smoothing:antialiased}
+.header{background:linear-gradient(135deg,var(--navy) 0%,#16213e 100%);color:white;padding:18px 16px 14px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,0.35)}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
+.header h1{font-size:17px;font-weight:700;letter-spacing:0.3px}
+.header p{font-size:11px;opacity:0.55}
+.back-btn{background:rgba(255,255,255,0.12);border:none;color:white;width:34px;height:34px;border-radius:10px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;text-decoration:none}
+.progress-wrap{background:rgba(255,255,255,0.13);border-radius:999px;height:5px;margin-top:13px;overflow:hidden}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--teal),#00e5c5);border-radius:999px;transition:width 0.4s ease;width:0%}
+.progress-label{font-size:10px;opacity:0.6;margin-top:5px;text-align:right}
+.content{padding:14px;max-width:640px;margin:0 auto}
+.tabs{display:flex;gap:8px;margin-bottom:14px}
+.tab-btn{flex:1;padding:12px 8px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;background:white;color:#888;box-shadow:0 1px 5px rgba(0,0,0,0.07)}
+.tab-btn.active{background:var(--navy);color:white;box-shadow:0 2px 12px rgba(26,26,46,0.3)}
+.section{background:white;border-radius:14px;margin-bottom:12px;overflow:hidden;box-shadow:0 1px 5px rgba(0,0,0,0.07)}
+.section-header{padding:13px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #f0f0f0}
+.sec-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.sec-title{font-size:13px;font-weight:700;color:var(--navy);flex:1}
+.sec-count{font-size:12px;color:#888;font-weight:500}
+.task{display:flex;align-items:flex-start;gap:12px;padding:13px 14px;border-bottom:1px solid #f5f5f5;cursor:pointer;transition:background 0.12s;min-height:50px}
+.task:last-child{border-bottom:none}
+.task:active{background:#f5f5f5}
+.task.done .task-text{text-decoration:line-through;color:#bbb}
+.chk{width:24px;height:24px;border-radius:7px;border:2px solid #ddd;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.18s;background:white}
+.task.done .chk{background:var(--teal);border-color:var(--teal)}
+.chk svg{display:none}
+.task.done .chk svg{display:block}
+.task-text{font-size:14px;color:var(--navy);font-weight:500;line-height:1.4}
+.task-time{font-size:10px;color:#aaa;margin-top:2px}
+.badge-schedule{font-size:9px;background:#e3f2fd;color:#1565c0;border:1px solid #bbdefb;border-radius:4px;padding:1px 5px;font-weight:700;margin-top:3px;display:inline-block}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.reset-bar{position:fixed;bottom:0;left:0;right:0;background:white;padding:12px 16px;box-shadow:0 -2px 12px rgba(0,0,0,0.08);display:flex;gap:10px;z-index:50}
+.reset-btn{flex:1;padding:13px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;transition:transform 0.12s}
+.reset-btn:active{transform:scale(0.97)}
+.reset-btn.primary{background:var(--teal);color:white}
+.reset-btn.secondary{background:#f0f2f5;color:#666}
+.date-display{text-align:center;padding:10px;font-size:12px;color:#888;background:white;border-radius:10px;margin-bottom:14px;box-shadow:0 1px 5px rgba(0,0,0,0.07)}
+.date-display strong{color:var(--navy)}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-top">
+    <a href="index.html" class="back-btn">&#8249;</a>
+    <div style="flex:1;margin-left:10px">
+      <h1>Opening / Closing</h1>
+      <p>Daily Store Checklist</p>
+    </div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+  <div class="progress-label" id="progressLabel">0 / 0</div>
+</div>
+<div class="content">
+  <div class="date-display" id="dateDisplay"></div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('opening')">&#9728;&#65039; Opening</button>
+    <button class="tab-btn" onclick="switchTab('closing')">&#127769; Closing</button>
+  </div>
+  <div class="tab-panel active" id="panel-opening">
+    <div class="section">
+      <div class="section-header">
+        <div class="sec-icon" style="background:#e8f5e9">&#9728;&#65039;</div>
+        <div class="sec-title">Opening Tasks</div>
+        <div class="sec-count" id="opening-count"></div>
+      </div>
+      <div id="opening-tasks"></div>
+    </div>
+  </div>
+  <div class="tab-panel" id="panel-closing">
+    <div class="section">
+      <div class="section-header">
+        <div class="sec-icon" style="background:#ede7f6">&#127769;</div>
+        <div class="sec-title">Closing Tasks</div>
+        <div class="sec-count" id="closing-count"></div>
+      </div>
+      <div id="closing-tasks"></div>
+    </div>
+  </div>
+</div>
+<div class="reset-bar">
+  <button class="reset-btn secondary" onclick="resetChecklist()">&#8635; Reset</button>
+  <button class="reset-btn primary" onclick="markAllDone()">&#10003; All Done</button>
+</div>
+<script>
+var openingTasks=[
+  {id:"o1",text:"Put the open sign out",time:"~1 min"},
+  {id:"o2",text:"Turn on the POS and log into Alleaves Terminal",time:"~3 min"},
+  {id:"o3",text:"Turn on both TVs and put on menu",time:"~2 min"},
+  {id:"o4",text:'Turn on kiosks and put the display on "never" mode',time:"~2 min"},
+  {id:"o5",text:"Open the curtain",time:"~2 min"}
+];
+var closingTasksAll=[
+  {id:"c1",text:"Vacuum the floor",time:"~5 min",every2days:true},
+  {id:"c2",text:"Clean the floor",time:"~15 min",every2days:true},
+  {id:"c3",text:"Go to POS and check all open orders \u2014 don\u2019t leave any open orders!",time:"~5 min"},
+  {id:"c4",text:"Refill the fridge",time:"~2 min"},
+  {id:"c5",text:"Walk around the store and see if there are any items missing price tag",time:"~5 min"},
+  {id:"c6",text:'Put kiosks display on "2 min" mode',time:"~2 min"},
+  {id:"c7",text:"Turn off TVs, terminals and AC",time:"~2 min"},
+  {id:"c8",text:"Take the sign in",time:"~1 min"}
+];
+
+// Every-2-day logic: Mon Mar 9 2026 is reference "on" day (Monday)
+// If Monday is ON, then Wed is ON, Fri is ON, Sun is ON, etc.
+function isEvery2DayOn(){
+  var ref=new Date(2026,2,9); // March 9, 2026 = Monday
+  var today=new Date();
+  today.setHours(0,0,0,0);
+  ref.setHours(0,0,0,0);
+  var diff=Math.round((today-ref)/(864e5));
+  return(Math.abs(diff)%2)===0;
+}
+
+function getNextFloorDay(){
+  if(isEvery2DayOn())return null;
+  var t=new Date();t.setHours(0,0,0,0);
+  t.setDate(t.getDate()+1);
+  return["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][t.getDay()];
+}
+
+function getTodayClosingTasks(){
+  var show=isEvery2DayOn();
+  return closingTasksAll.filter(function(t){return t.every2days?show:true;});
+}
+
+var currentTab="opening";
+var todayKey=new Date().toISOString().slice(0,10);
+var stateKey="wh_checklist_"+todayKey;
+function loadState(){try{return JSON.parse(localStorage.getItem(stateKey))||{};}catch(e){return{};}}
+function saveState(s){localStorage.setItem(stateKey,JSON.stringify(s));}
+
+function renderDate(){
+  var d=new Date();
+  var days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  var months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var on=isEvery2DayOn();
+  var next=getNextFloorDay();
+  document.getElementById("dateDisplay").innerHTML=
+    "<strong>"+days[d.getDay()]+", "+months[d.getMonth()]+" "+d.getDate()+"</strong>"+
+    (on?"<br><span style=\"color:var(--teal);font-weight:600\">\u2713 Floor cleaning day</span>"
+       :"<br><span style=\"color:#aaa\">Floor cleaning: next on "+next+"</span>");
+}
+
+function chkSVG(){
+  return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+}
+
+function renderTasks(){
+  var state=loadState();
+  var closingTasks=getTodayClosingTasks();
+  var tasks=currentTab==="opening"?openingTasks:closingTasks;
+  var container=document.getElementById(currentTab+"-tasks");
+  var html="";
+  tasks.forEach(function(t,i){
+    var done=state[t.id]||false;
+    html+='<div class="task '+(done?"done":"")+'" onclick="toggleTask(\''+t.id+'\')">'
+      +'<div class="chk">'+chkSVG()+'</div>'
+      +"<div>"
+      +'<div class="task-text">'+(i+1)+". "+t.text+"</div>"
+      +'<div class="task-time">\u23F1 '+t.time+"</div>"
+      +(t.every2days?'<span class="badge-schedule">EVERY 2 DAYS</span>':"")
+      +"</div></div>";
+  });
+  container.innerHTML=html;
+  var doneCount=tasks.filter(function(t){return state[t.id];}).length;
+  document.getElementById(currentTab+"-count").textContent=doneCount+" / "+tasks.length;
+  var allTasks=openingTasks.concat(closingTasks);
+  var allDone=allTasks.filter(function(t){return state[t.id];}).length;
+  var pct=allTasks.length?Math.round((allDone/allTasks.length)*100):0;
+  document.getElementById("progressBar").style.width=pct+"%";
+  document.getElementById("progressLabel").textContent=allDone+" / "+allTasks.length+" complete";
+}
+
+function toggleTask(id){var s=loadState();s[id]=!s[id];saveState(s);renderTasks();}
+
+function switchTab(tab){
+  currentTab=tab;
+  document.querySelectorAll(".tab-btn").forEach(function(b,i){
+    b.classList.toggle("active",(i===0&&tab==="opening")||(i===1&&tab==="closing"));
+  });
+  document.querySelectorAll(".tab-panel").forEach(function(p){
+    p.classList.toggle("active",p.id==="panel-"+tab);
+  });
+  renderTasks();
+}
+
+function resetChecklist(){
+  if(confirm("Reset all checkboxes for today?")){saveState({});renderTasks();}
+}
+
+function markAllDone(){
+  var s=loadState();
+  var closingTasks=getTodayClosingTasks();
+  var tasks=currentTab==="opening"?openingTasks:closingTasks;
+  tasks.forEach(function(t){s[t.id]=true;});
+  saveState(s);renderTasks();
+}
+
+renderDate();renderTasks();
+</script>
+</body>
+</html>
