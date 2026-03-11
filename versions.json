@@ -1,5 +1,12 @@
 [
   {
+    "id": "8bb051f",
+    "name": "v2 — Added Version Manager",
+    "date": "2026-03-11",
+    "description": "Added Version Manager tool with timeline UI, restore commands, and hub page card",
+    "files": ["versions.html", "versions.json", "index.html"]
+  },
+  {
     "id": "47e9a80",
     "name": "v1 — Original Launch",
     "date": "2025-03-06",
