@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AP Manager — Woodhaven Cannabis</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f5;min-height:100vh;color:#1a1a2e}
+
+.nav{background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;padding:0 16px;box-shadow:0 2px 12px rgba(0,0,0,.3);position:sticky;top:0;z-index:200;flex-wrap:wrap;gap:0}
+.nav-brand{color:#fff;font-size:14px;font-weight:700;padding:14px 16px 14px 0;white-space:nowrap;border-right:1px solid rgba(255,255,255,.1);margin-right:8px}
+.nav-brand span{color:#00c9a7}
+.nav-tabs{display:flex;gap:0;overflow-x:auto}
+.nav-tab{color:rgba(255,255,255,.5);padding:16px 14px;font-size:12px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;-webkit-tap-highlight-color:transparent;letter-spacing:.2px}
+.nav-tab:hover{color:rgba(255,255,255,.85)}
+.nav-tab.active{color:#00c9a7;border-bottom-color:#00c9a7}
+
+.page{display:none;padding:18px;max-width:1000px;margin:0 auto}
+.page.active{display:block}
+.page-title{font-size:20px;font-weight:800;color:#1a1a2e;margin-bottom:4px}
+.page-sub{font-size:12px;color:#888;margin-bottom:18px}
+
+.card{background:#fff;border-radius:14px;box-shadow:0 1px 6px rgba(0,0,0,.07);margin-bottom:16px;overflow:hidden}
+.card-header{padding:14px 18px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.card-title{font-size:14px;font-weight:700;color:#1a1a2e}
+.card-body{padding:18px}
+
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:18px}
+.tile{background:#fff;border-radius:12px;padding:16px 18px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.tile-label{font-size:10px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:.6px}
+.tile-val{font-size:26px;font-weight:800;margin-top:5px;line-height:1}
+.tile-sub{font-size:11px;color:#aaa;margin-top:4px}
+.tile.red .tile-val{color:#c62828}
+.tile.orange .tile-val{color:#e65100}
+.tile.teal .tile-val{color:#009688}
+.tile.navy .tile-val{color:#1a1a2e}
+
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .15s;-webkit-tap-highlight-color:transparent;white-space:nowrap}
+.btn:active{opacity:.8}
+.btn-primary{background:#1a1a2e;color:#fff}
+.btn-teal{background:#009688;color:#fff}
+.btn-outline{background:#fff;color:#555;border:1px solid #ddd}
+.btn-red{background:#ffebee;color:#c62828;border:1px solid #ffcdd2}
+.btn-green{background:#e8f5e9;color:#2e7d32;border:1px solid #c8e6c9}
+.btn-orange{background:#fff3e0;color:#e65100;border:1px solid #ffe0b2}
+.btn-sm{padding:5px 10px;font-size:11px}
+
+.form-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.form-group{flex:1;min-width:130px}
+.form-group.full{flex:100%}
+.form-group label{font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px}
+.form-group input,.form-group select,.form-group textarea{width:100%;border:1px solid #e0e0e0;border-radius:8px;padding:8px 11px;font-size:13px;color:#1a1a2e;font-family:inherit;outline:none;transition:border-color .2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:#009688}
+
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:#f5f5f5;padding:9px 12px;text-align:left;font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid #eee;white-space:nowrap}
+td{padding:11px 12px;border-bottom:1px solid #f5f5f5;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+.table-wrap{overflow-x:auto}
+
+.badge{display:inline-block;padding:2px 7px;border-radius:999px;font-size:10px;font-weight:700}
+.badge-red{background:#ffebee;color:#c62828}
+.badge-orange{background:#fff3e0;color:#e65100}
+.badge-green{background:#e8f5e9;color:#2e7d32}
+.badge-gray{background:#f5f5f5;color:#666}
+.badge-blue{background:#e3f2fd;color:#1565c0}
+.badge-teal{background:#e0f2f1;color:#00796b}
+
+/* ── JE Generator ── */
+.je-vendor-row{display:grid;grid-template-columns:1fr 140px 130px 36px;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid #f5f5f5;background:#fff}
+.je-vendor-row:hover{background:#fafafa}
+.je-vendor-row:last-child{border-bottom:none}
+
+.je-output{background:#1a1a2e;border-radius:14px;padding:20px;color:#fff}
+.je-output h3{font-size:13px;font-weight:700;color:#00c9a7;margin-bottom:4px}
+.je-output p{font-size:11px;color:#888;margin-bottom:16px}
+.je-table{width:100%;border-collapse:collapse;font-size:12px}
+.je-table th{background:rgba(255,255,255,.08);color:#aaa;padding:8px 10px;text-align:left;font-size:10px;letter-spacing:.5px;font-weight:600;border-bottom:1px solid rgba(255,255,255,.08)}
+.je-table td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.06);vertical-align:middle}
+.je-table tr:last-child td{border-bottom:none}
+.je-table .debit-row td{background:rgba(0,201,167,.06)}
+.je-table .credit-row td{background:rgba(255,255,255,.02)}
+.je-acct{color:#00c9a7;font-weight:600}
+.je-inv-acct{color:#80cbc4}
+.je-amount-d{color:#a5d6a7;font-weight:700;text-align:right}
+.je-amount-c{color:#ef9a9a;font-weight:700;text-align:right}
+.je-name{color:#fff9c4;font-size:11px}
+.je-desc{color:#aaa;font-size:11px}
+.je-total-row td{background:rgba(255,255,255,.05);font-weight:700;border-top:2px solid rgba(255,255,255,.15)!important}
+
+.copy-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;transition:background .2s}
+.copy-btn:hover{background:rgba(255,255,255,.18)}
+
+/* ── Pay page ── */
+.pay-layout{display:grid;grid-template-columns:240px 1fr;gap:14px}
+@media(max-width:660px){.pay-layout{grid-template-columns:1fr}}
+
+.vendor-pick-list{max-height:380px;overflow-y:auto}
+.vendor-pick-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-bottom:1px solid #f5f5f5;transition:background .15s}
+.vendor-pick-item:hover{background:#f9f9f9}
+.vendor-pick-item.selected{background:#e0f2f1}
+.vendor-pick-item input[type=checkbox]{width:15px;height:15px;accent-color:#009688;cursor:pointer}
+.vendor-pick-name{font-size:13px;font-weight:600}
+.vendor-pick-owed{font-size:11px;color:#e65100;font-weight:600}
+
+.bill-pick-item{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid #f5f5f5;cursor:pointer;transition:background .15s}
+.bill-pick-item:hover{background:#f9f9f9}
+.bill-pick-item.selected-bill{background:#e0f2f1}
+.bill-pick-item input[type=checkbox]{width:15px;height:15px;accent-color:#009688;cursor:pointer;flex-shrink:0}
+
+.batch-summary{background:#1a1a2e;border-radius:14px;padding:18px;color:#fff;margin-top:14px}
+.batch-summary h3{font-size:13px;font-weight:700;color:#00c9a7;margin-bottom:12px}
+.batch-row{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:12px}
+.batch-row:last-child{border-bottom:none}
+.batch-vendor{font-weight:700;font-size:13px}
+.batch-bank{font-size:11px;color:#aaa;margin-top:2px}
+.batch-routing{font-size:11px;color:#80cbc4;margin-top:2px;font-family:monospace}
+.batch-amount-line{display:flex;justify-content:space-between;align-items:center;margin-top:4px}
+.batch-amount{font-weight:700;color:#00c9a7;font-size:14px}
+.batch-total-row{margin-top:12px;padding-top:12px;border-top:2px solid rgba(255,255,255,.15);display:flex;justify-content:space-between;font-size:15px;font-weight:800}
+.batch-total-row span:last-child{color:#00c9a7}
+
+.empty-state{text-align:center;padding:36px 20px;color:#bbb}
+.empty-state .icon{font-size:32px;margin-bottom:10px}
+.empty-state p{font-size:13px}
+
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;align-items:center;justify-content:center;padding:16px}
+.modal-backdrop.open{display:flex}
+.modal{background:#fff;border-radius:16px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal-header{padding:18px 22px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:15px;font-weight:700}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:#888}
+.modal-body{padding:22px}
+.modal-footer{padding:14px 22px;border-top:1px solid #f0f0f0;display:flex;gap:8px;justify-content:flex-end}
+
+.step-box{background:#f5f5f5;border-radius:10px;padding:12px 14px;margin-bottom:8px;font-size:12px;line-height:1.6;color:#444}
+.step-box strong{color:#1a1a2e;display:block;margin-bottom:2px}
+
+.overdue-row td{background:#fff8f8!important}
+.section-note{font-size:11px;color:#aaa;margin-top:8px;font-style:italic;padding:0 4px}
+.divider{height:1px;background:#f0f0f0;margin:16px 0}
+
+.amount-input{width:100%;border:1px solid #e0e0e0;border-radius:6px;padding:7px 10px;font-size:13px;color:#1a1a2e;outline:none;text-align:right;font-weight:600}
+.amount-input:focus{border-color:#009688}
+
+/* ── Data Center ── */
+.dc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+@media(max-width:660px){.dc-grid{grid-template-columns:1fr}}
+.dc-card{background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.07);overflow:hidden;transition:transform .15s,box-shadow .15s}
+.dc-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.12)}
+.dc-card-head{background:linear-gradient(135deg,#1a1a2e,#16213e);padding:16px 18px;color:#fff;display:flex;align-items:center;gap:12px}
+.dc-card-avatar{width:42px;height:42px;border-radius:10px;background:rgba(0,201,167,.15);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#00c9a7;flex-shrink:0}
+.dc-card-name{font-size:15px;font-weight:700}
+.dc-card-terms{font-size:10px;color:rgba(255,255,255,.5);margin-top:2px}
+.dc-card-body{padding:14px 18px}
+.dc-row{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid #f8f8f8;font-size:12px}
+.dc-row:last-child{border-bottom:none}
+.dc-row-icon{width:20px;text-align:center;flex-shrink:0;font-size:13px}
+.dc-row-label{width:72px;flex-shrink:0;color:#aaa;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;padding-top:1px}
+.dc-row-val{flex:1;color:#1a1a2e;font-weight:500;word-break:break-all}
+.dc-row-val a{color:#1565c0;text-decoration:none;font-weight:600}
+.dc-row-val a:hover{text-decoration:underline}
+.dc-row-val.mono{font-family:monospace;letter-spacing:.3px}
+.dc-card-foot{padding:10px 18px;border-top:1px solid #f0f0f0;display:flex;gap:6px;flex-wrap:wrap}
+.dc-ap-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:8px;font-size:11px;font-weight:700}
+.dc-ap-owed{background:#fff3e0;color:#e65100}
+.dc-ap-clear{background:#e8f5e9;color:#2e7d32}
+.dc-search{width:100%;border:1px solid #e0e0e0;border-radius:10px;padding:10px 14px 10px 36px;font-size:14px;outline:none;color:#1a1a2e;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23aaa' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.242.656a5 5 0 1 1 0-10 5 5 0 0 1 0 10z'/%3E%3C/svg%3E") no-repeat 12px center;transition:border-color .2s}
+.dc-search:focus{border-color:#009688}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" style="color:rgba(255,255,255,.5);padding:14px 10px 14px 0;font-size:16px;text-decoration:none;border-right:1px solid rgba(255,255,255,.1);margin-right:8px;" title="Home">🏠</a>
+  <div class="nav-brand" style="border-right:none;margin-right:0;">💳 <span>AP</span> Manager</div>
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="showPage('dashboard')">Dashboard</div>
+    <div class="nav-tab" onclick="showPage('datacenter')">Data Center</div>
+    <div class="nav-tab" onclick="showPage('vendors')">Vendors</div>
+    <div class="nav-tab" onclick="showPage('je')">📒 JE Generator</div>
+    <div class="nav-tab" onclick="showPage('ap')">AP Tracker</div>
+    <div class="nav-tab" onclick="showPage('pay')">Pay Vendors</div>
+    <div class="nav-tab" onclick="showPage('history')">History</div>
+  </div>
+</nav>
+
+<!-- ══ DASHBOARD ═════════════════════════════════════════════════════════════ -->
+<div class="page active" id="page-dashboard">
+  <div style="padding:4px 0 14px">
+    <div class="page-title">Good morning 👋</div>
+    <div class="page-sub" id="dash-date"></div>
+  </div>
+  <div class="tiles" id="dash-tiles"></div>
+  <div class="card">
+    <div class="card-header"><span class="card-title">⚠️ Overdue &amp; Due This Week</span>
+      <button class="btn btn-teal btn-sm" onclick="showPage('pay')">Pay Now →</button>
+    </div>
+    <div class="card-body" style="padding:0">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Vendor</th><th>Delivery Date</th><th>Due Date</th><th>Days</th><th style="text-align:right">Amount</th><th>Status</th></tr></thead>
+        <tbody id="dash-tbody"></tbody>
+      </table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DATA CENTER ═════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-datacenter">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px">
+    <div>
+      <div class="page-title">Vendor Data Center</div>
+      <div class="page-sub">All vendor info at a glance — menus, assets, banking, AP balance</div>
+    </div>
+    <button class="btn btn-teal" onclick="openVendorModal()">+ Add Vendor</button>
+  </div>
+  <div style="margin-bottom:16px">
+    <input type="text" class="dc-search" id="dc-search" placeholder="Search vendors..." oninput="renderDataCenter()">
+  </div>
+  <div class="dc-grid" id="dc-grid"></div>
+  <div id="dc-empty" style="display:none" class="empty-state"><div class="icon">📦</div><p>No vendors found. Add your first vendor to get started.</p></div>
+</div>
+
+<!-- ══ VENDORS ════════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-vendors">
+  <div class="page-title">Vendor Directory</div>
+  <div class="page-sub">Store banking info + QuickBooks account names once — never type them again</div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">🏦 All Vendors</span>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-outline btn-sm" onclick="openQBJsonModal()">🔗 Import from QuickBooks</button>
+        <button class="btn btn-teal btn-sm" onclick="openVendorModal()">+ Add Vendor</button>
+      </div>
+    </div>
+    <div class="card-body" style="padding:0">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Vendor</th><th>QB Name (AP)</th><th>QB Inventory Account</th><th>Bank</th><th>Routing #</th><th>Account #</th><th>Net</th><th>Links</th><th>Open AP</th><th></th></tr></thead>
+        <tbody id="vendor-tbody"></tbody>
+      </table></div>
+    </div>
+  </div>
+  <p class="section-note">⚠️ Keep this file in a secure location — routing and account numbers are sensitive.</p>
+</div>
+
+<!-- ══ JE GENERATOR ══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-je">
+  <div class="page-title">📒 Journal Entry Generator</div>
+  <div class="page-sub">Enter the delivery details → get the exact two-line QB format for every vendor. Copy line by line into QuickBooks.</div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Delivery Details</span>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <div style="font-size:11px;color:#888">Delivery Date:</div>
+        <input type="date" id="je-date" style="border:1px solid #e0e0e0;border-radius:8px;padding:7px 11px;font-size:13px;outline:none;color:#1a1a2e">
+        <div style="font-size:11px;color:#888">JE Memo:</div>
+        <input type="text" id="je-memo" placeholder="delivery 2/26" style="border:1px solid #e0e0e0;border-radius:8px;padding:7px 11px;font-size:13px;outline:none;width:130px;color:#1a1a2e">
+      </div>
+    </div>
+    <div class="card-body" style="padding:0">
+      <!-- Vendor rows -->
+      <div style="display:grid;grid-template-columns:1fr 150px 140px 36px;gap:0;padding:8px 14px;background:#f9f9f9;border-bottom:1px solid #eee">
+        <div style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px">Vendor</div>
+        <div style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px">Invoice #</div>
+        <div style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;text-align:right;padding-right:8px">Invoice Amount</div>
+        <div></div>
+      </div>
+      <div id="je-vendor-rows"></div>
+      <div style="padding:10px 14px;border-top:1px solid #f0f0f0">
+        <button class="btn btn-outline btn-sm" onclick="addJERow()">+ Add Vendor</button>
+      </div>
+    </div>
+    <div style="padding:14px 18px;border-top:1px solid #f0f0f0;display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-outline" onclick="clearJE()">Clear</button>
+      <button class="btn btn-teal" onclick="generateJE()">Generate Journal Entry →</button>
+    </div>
+  </div>
+
+  <!-- Output -->
+  <div id="je-output-wrap"></div>
+</div>
+
+<!-- ══ AP TRACKER ════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-ap">
+  <div class="page-title">AP Tracker</div>
+  <div class="page-sub">Outstanding balances from journal entries — what you owe each vendor</div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">📄 Open AP Entries</span>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-outline btn-sm" onclick="openQBModal()">⬇️ Import from QB</button>
+        <button class="btn btn-teal btn-sm" onclick="openAPModal()">+ Add Entry</button>
+      </div>
+    </div>
+    <div style="padding:10px 16px;border-bottom:1px solid #f0f0f0;display:flex;gap:8px;flex-wrap:wrap">
+      <select id="ap-filter-vendor" onchange="renderAP()" style="border:1px solid #eee;border-radius:8px;padding:6px 10px;font-size:12px;color:#555;outline:none">
+        <option value="">All Vendors</option>
+      </select>
+      <select id="ap-filter-status" onchange="renderAP()" style="border:1px solid #eee;border-radius:8px;padding:6px 10px;font-size:12px;color:#555;outline:none">
+        <option value="">All Statuses</option>
+        <option value="unpaid">Unpaid</option>
+        <option value="paid">Paid</option>
+      </select>
+    </div>
+    <div class="card-body" style="padding:0">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Vendor</th><th>Invoice #</th><th>Delivery Date</th><th>Due (Net 30)</th><th>Days</th><th style="text-align:right">Amount</th><th>QB Inventory Acct</th><th>Status</th><th></th></tr></thead>
+        <tbody id="ap-tbody"></tbody>
+      </table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAY VENDORS ════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-pay">
+  <div class="page-title">Pay Vendors — Batch ACH</div>
+  <div class="page-sub">Select vendors → see what you owe → routing &amp; account numbers fill automatically</div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-header">
+      <span class="card-title">Batch Details</span>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <div style="font-size:11px;color:#888">Payment Date:</div>
+        <input type="date" id="pay-date" style="border:1px solid #e0e0e0;border-radius:8px;padding:7px 10px;font-size:12px;outline:none;color:#1a1a2e">
+        <div style="font-size:11px;color:#888">Batch Name (for bank):</div>
+        <input type="text" id="pay-ref" placeholder="Jetty, hepworth, old pal…" style="border:1px solid #e0e0e0;border-radius:8px;padding:7px 10px;font-size:12px;outline:none;width:180px;color:#1a1a2e">
+      </div>
+    </div>
+  </div>
+
+  <div class="pay-layout">
+    <div>
+      <div class="card">
+        <div class="card-header"><span class="card-title" style="font-size:13px">Select Vendors</span><button class="btn btn-outline btn-sm" onclick="clearVendorSel()">Clear</button></div>
+        <div class="vendor-pick-list" id="vendor-pick-list"></div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title" style="font-size:13px">Select AP Entries to Pay</span>
+          <button class="btn btn-outline btn-sm" onclick="selectAllAP()">Select All</button>
+        </div>
+        <div id="ap-pick-area">
+          <div class="empty-state"><div class="icon">👈</div><p>Select vendors on the left</p></div>
+        </div>
+      </div>
+      <div id="batch-summary-wrap"></div>
+      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap" id="pay-actions"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HISTORY ════════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-history">
+  <div class="page-title">Payment History</div>
+  <div class="page-sub">All recorded batch payments</div>
+  <div class="card">
+    <div class="card-header"><span class="card-title">📋 History</span><button class="btn btn-red btn-sm" onclick="if(confirm('Clear all history?'))clearHistory()">Clear</button></div>
+    <div id="history-list"></div>
+  </div>
+</div>
+
+<!-- ══ QB JSON IMPORT MODAL ═══════════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="qbj-modal">
+  <div class="modal" style="max-width:580px">
+    <div class="modal-header">
+      <span class="modal-title">🔗 Import Vendors from QuickBooks</span>
+      <button class="modal-close" onclick="closeModal('qbj-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="background:#e8f5e9;border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:12px;color:#2e7d32;line-height:1.7">
+        <strong>How this works:</strong><br>
+        1. Run <code style="background:#c8e6c9;padding:1px 5px;border-radius:4px">python qb_sync.py</code> on your computer<br>
+        2. It connects to QuickBooks, downloads your vendors + chart of accounts<br>
+        3. It saves a file called <code style="background:#c8e6c9;padding:1px 5px;border-radius:4px">qb_export.json</code><br>
+        4. Click "Choose File" below and select that file — vendors auto-populate here
+      </div>
+
+      <div style="border:2px dashed #e0e0e0;border-radius:12px;padding:24px;text-align:center;margin-bottom:14px;cursor:pointer" onclick="document.getElementById('qbj-file-input').click()">
+        <div style="font-size:28px;margin-bottom:8px">📂</div>
+        <div style="font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:4px">Click to select qb_export.json</div>
+        <div style="font-size:12px;color:#aaa">or drag and drop the file here</div>
+        <input type="file" id="qbj-file-input" accept=".json" style="display:none" onchange="previewQBJson(this)">
+      </div>
+
+      <div id="qbj-preview" style="display:none">
+        <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:8px">Preview (what will be imported):</div>
+        <div style="max-height:220px;overflow-y:auto;border:1px solid #eee;border-radius:10px;font-size:12px" id="qbj-preview-list"></div>
+        <div style="margin-top:10px;font-size:12px;color:#888;background:#f9f9f9;border-radius:8px;padding:10px;line-height:1.7">
+          ⚠️ <strong>Routing &amp; account numbers</strong> are not stored in QuickBooks — you'll still need to add those manually for each vendor (click Edit on the vendor row after importing).
+        </div>
+      </div>
+      <div id="qbj-result" style="margin-top:8px;font-size:12px"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('qbj-modal')">Cancel</button>
+      <button class="btn btn-teal" id="qbj-import-btn" style="display:none" onclick="doImportQBJson()">Import Vendors</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ VENDOR MODAL ═══════════════════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="vendor-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="vendor-modal-title">Add Vendor</span>
+      <button class="modal-close" onclick="closeModal('vendor-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label>Vendor Name *</label><input id="v-name" placeholder="PUFF"></div>
+        <div class="form-group"><label>QB AP Name (exact)</label><input id="v-qbname" placeholder="PUFF"></div>
+      </div>
+      <div class="form-group full" style="margin-bottom:10px">
+        <label>QB Inventory Account *</label>
+        <input id="v-invacct" placeholder="INVENTORY - PUFF">
+        <div style="font-size:10px;color:#aaa;margin-top:3px">Exact account name from your QB chart of accounts (e.g. "INVENTORY - PUFF", "INVENTORY - Old Pal")</div>
+      </div>
+      <div class="divider"></div>
+      <div style="font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Banking Info (ACH)</div>
+      <div class="form-row">
+        <div class="form-group"><label>Bank Name</label><input id="v-bank" placeholder="East West Bank"></div>
+        <div class="form-group"><label>Net Terms</label>
+          <select id="v-terms"><option>Net 30</option><option>Net 15</option><option>Net 45</option><option>Net 60</option><option>COD</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Routing # *</label><input id="v-routing" placeholder="320070381" inputmode="numeric"></div>
+        <div class="form-group"><label>Account # *</label><input id="v-account" placeholder="8420018155" inputmode="numeric"></div>
+        <div class="form-group" style="min-width:100px"><label>Type</label>
+          <select id="v-acct-type"><option>Checking</option><option>Savings</option></select>
+        </div>
+      </div>
+      <div class="form-group full">
+        <label>Notes</label><input id="v-notes" placeholder="e.g. Nabis vendor — same East West Bank ACH as other Nabis brands">
+      </div>
+      <div class="divider"></div>
+      <div style="font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Links &amp; Resources</div>
+      <div class="form-row">
+        <div class="form-group full"><label>Menu URL</label><input id="v-menu" placeholder="https://example.com/wholesale-menu" type="url">
+          <div style="font-size:10px;color:#aaa;margin-top:3px">Link to wholesale menu, live menu page, or Nabis catalog</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group full"><label>Assets URL</label><input id="v-assets" placeholder="https://drive.google.com/... or portal link" type="url">
+          <div style="font-size:10px;color:#aaa;margin-top:3px">Brand assets, sales kit, DAM portal, Distru menu, Google Drive, etc.</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('vendor-modal')">Cancel</button>
+      <button class="btn btn-teal" onclick="saveVendor()">Save Vendor</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ AP ENTRY MODAL ════════════════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="ap-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="ap-modal-title">Add AP Entry</span>
+      <button class="modal-close" onclick="closeModal('ap-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group full"><label>Vendor *</label><select id="b-vendor"></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Invoice #</label><input id="b-inv" placeholder="INV-1042"></div>
+        <div class="form-group"><label>Delivery Date *</label><input id="b-date" type="date"></div>
+        <div class="form-group"><label>Amount *</label><input id="b-amount" type="number" step="0.01" placeholder="0.00"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Due Date (auto Net 30)</label><input id="b-due" type="date"></div>
+        <div class="form-group"><label>Status</label>
+          <select id="b-status"><option value="unpaid">Unpaid</option><option value="paid">Paid</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('ap-modal')">Cancel</button>
+      <button class="btn btn-teal" onclick="saveAP()">Save Entry</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ QB IMPORT MODAL ═══════════════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="qb-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">⬇️ Import from QuickBooks</span>
+      <button class="modal-close" onclick="closeModal('qb-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:#555;margin-bottom:14px">Export your AP Aging Detail from QB and paste it here.</p>
+      <div class="step-box"><strong>Step 1 — In QuickBooks Online</strong>Reports → Accounts Payable Aging Detail → Run Report</div>
+      <div class="step-box"><strong>Step 2 — Export</strong>Click the Export icon → Export to Excel or CSV</div>
+      <div class="step-box"><strong>Step 3 — Paste below</strong>Open the CSV, copy all data rows, paste here.<br>Expected columns: Vendor, Invoice #, Date, Due Date, Amount</div>
+      <div class="form-group full" style="margin-top:12px">
+        <label>Paste CSV data</label>
+        <textarea id="qb-csv" rows="7" placeholder="Vendor Name,Invoice #,Invoice Date,Due Date,Amount&#10;PUFF,INV-001,01/15/2026,02/14/2026,810.00&#10;Old Pal,INV-002,01/15/2026,02/14/2026,737.50" style="border:1px solid #e0e0e0;border-radius:8px;padding:10px;font-size:11px;font-family:monospace;resize:vertical;width:100%;outline:none;min-height:120px"></textarea>
+      </div>
+      <div id="qb-import-result" style="margin-top:8px;font-size:12px"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('qb-modal')">Cancel</button>
+      <button class="btn btn-teal" onclick="importCSV()">Import</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Storage ───────────────────────────────────────────────────────────────────
+const get = k => JSON.parse(localStorage.getItem(k)||'[]');
+const set = (k,v) => localStorage.setItem(k,JSON.stringify(v));
+const uid = () => Math.random().toString(36).slice(2,9);
+const fmt$ = n => '$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtDate = d => d?new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'2-digit',day:'2-digit',year:'numeric'}):'—';
+const fmtShort = d => d?new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'numeric',day:'numeric'}):'';
+const today = () => new Date().toISOString().split('T')[0];
+const daysDiff = d => d?Math.round((new Date(d+'T12:00:00')-new Date())/86400000):null;
+
+// ── Nav ───────────────────────────────────────────────────────────────────────
+function showPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  const map=['dashboard','datacenter','vendors','je','ap','pay','history'];
+  const idx=map.indexOf(p);
+  if(idx>=0) document.querySelectorAll('.nav-tab')[idx]?.classList.add('active');
+  if(p==='dashboard')renderDashboard();
+  if(p==='datacenter')renderDataCenter();
+  if(p==='vendors')renderVendors();
+  if(p==='je')initJE();
+  if(p==='ap')renderAP();
+  if(p==='pay')renderPayPage();
+  if(p==='history')renderHistory();
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────────────────────────
+function renderDashboard(){
+  const entries=get('apEntries').filter(e=>e.status!=='paid');
+  const now=new Date();now.setHours(0,0,0,0);
+  const week=new Date(now);week.setDate(week.getDate()+7);
+  const overdue=entries.filter(e=>e.dueDate&&new Date(e.dueDate+'T12:00:00')<now);
+  const dueWeek=entries.filter(e=>{if(!e.dueDate)return false;const d=new Date(e.dueDate+'T12:00:00');return d>=now&&d<=week;});
+  const totalAP=entries.reduce((s,e)=>s+(e.amount||0),0);
+  document.getElementById('dash-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('dash-tiles').innerHTML=`
+    <div class="tile navy"><div class="tile-label">Total Open AP</div><div class="tile-val">${fmt$(totalAP)}</div><div class="tile-sub">${entries.length} unpaid entries</div></div>
+    <div class="tile red"><div class="tile-label">Overdue</div><div class="tile-val">${fmt$(overdue.reduce((s,e)=>s+e.amount,0))}</div><div class="tile-sub">${overdue.length} past due</div></div>
+    <div class="tile orange"><div class="tile-label">Due This Week</div><div class="tile-val">${fmt$(dueWeek.reduce((s,e)=>s+e.amount,0))}</div><div class="tile-sub">${dueWeek.length} entries</div></div>
+    <div class="tile teal"><div class="tile-label">Vendors</div><div class="tile-val">${get('vendors').length}</div><div class="tile-sub">in directory</div></div>`;
+  const urgent=[...overdue,...dueWeek].filter((e,i,a)=>a.findIndex(x=>x.id===e.id)===i).sort((a,b)=>(a.dueDate||'9999').localeCompare(b.dueDate||'9999'));
+  const vendors=get('vendors');
+  const tbody=document.getElementById('dash-tbody');
+  if(!urgent.length){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:24px;color:#aaa">No overdue or upcoming payments 🎉</td></tr>';return;}
+  tbody.innerHTML=urgent.map(e=>{
+    const v=vendors.find(x=>x.id===e.vendorId);
+    const d=daysDiff(e.dueDate);
+    const badge=d<0?`<span class="badge badge-red">${Math.abs(d)}d overdue</span>`:d===0?`<span class="badge badge-orange">TODAY</span>`:`<span class="badge badge-orange">${d}d</span>`;
+    return `<tr class="${d<0?'overdue-row':''}"><td><strong>${v?.name||'?'}</strong></td><td>${fmtDate(e.date)}</td><td>${fmtDate(e.dueDate)}</td><td>${badge}</td><td style="text-align:right"><strong>${fmt$(e.amount)}</strong></td><td><span class="badge badge-red">Unpaid</span></td></tr>`;
+  }).join('');
+}
+
+// ── VENDORS ───────────────────────────────────────────────────────────────────
+let editVendorId=null;
+function openVendorModal(id){
+  editVendorId=id||null;
+  document.getElementById('vendor-modal-title').textContent=id?'Edit Vendor':'Add Vendor';
+  const v=id?get('vendors').find(x=>x.id===id):{};
+  ['name','qbname','invacct','bank','routing','account','notes','menu','assets'].forEach(f=>document.getElementById('v-'+f).value=v?.[f]||'');
+  document.getElementById('v-terms').value=v?.terms||'Net 30';
+  document.getElementById('v-acct-type').value=v?.acctType||'Checking';
+  document.getElementById('vendor-modal').classList.add('open');
+}
+function saveVendor(){
+  const name=document.getElementById('v-name').value.trim();
+  if(!name){alert('Vendor name required');return;}
+  const vendors=get('vendors');
+  const obj={id:editVendorId||uid(),name,qbname:document.getElementById('v-qbname').value.trim(),
+    invacct:document.getElementById('v-invacct').value.trim(),
+    bank:document.getElementById('v-bank').value.trim(),
+    routing:document.getElementById('v-routing').value.trim(),
+    account:document.getElementById('v-account').value.trim(),
+    terms:document.getElementById('v-terms').value,
+    acctType:document.getElementById('v-acct-type').value,
+    notes:document.getElementById('v-notes').value.trim(),
+    menu:document.getElementById('v-menu').value.trim(),
+    assets:document.getElementById('v-assets').value.trim()};
+  if(editVendorId){const i=vendors.findIndex(x=>x.id===editVendorId);vendors[i]=obj;}else vendors.push(obj);
+  set('vendors',vendors);closeModal('vendor-modal');renderVendors();renderDataCenter();
+}
+function deleteVendor(id){if(!confirm('Delete vendor?'))return;set('vendors',get('vendors').filter(x=>x.id!==id));renderVendors();renderDataCenter();}
+function renderVendors(){
+  const vendors=get('vendors');
+  const entries=get('apEntries');
+  const tbody=document.getElementById('vendor-tbody');
+  if(!vendors.length){tbody.innerHTML='<tr><td colspan="10" style="text-align:center;padding:24px;color:#aaa">No vendors yet — add your first vendor above</td></tr>';return;}
+  const mask=s=>s?'•'.repeat(Math.max(0,s.length-4))+s.slice(-4):'—';
+  tbody.innerHTML=vendors.map(v=>{
+    const owed=entries.filter(e=>e.vendorId===v.id&&e.status!=='paid').reduce((s,e)=>s+e.amount,0);
+    return `<tr>
+      <td><strong>${v.name}</strong>${v.notes?`<div style="font-size:10px;color:#aaa;margin-top:2px">${v.notes}</div>`:''}  </td>
+      <td style="color:#888;font-size:11px">${v.qbname||'—'}</td>
+      <td><span class="badge badge-teal" style="font-size:10px;font-family:monospace">${v.invacct||'—'}</span></td>
+      <td style="font-size:12px">${v.bank||'—'}</td>
+      <td style="font-family:monospace;font-size:11px">${mask(v.routing)}</td>
+      <td style="font-family:monospace;font-size:11px">${mask(v.account)}</td>
+      <td><span class="badge badge-gray">${v.terms||'—'}</span></td>
+      <td style="white-space:nowrap">${v.menu?`<a href="${v.menu}" target="_blank" rel="noopener" style="color:#1565c0;text-decoration:none;font-size:11px;font-weight:600" title="${v.menu}">📋 Menu</a>`:''} ${v.assets?`<a href="${v.assets}" target="_blank" rel="noopener" style="color:#1565c0;text-decoration:none;font-size:11px;font-weight:600" title="${v.assets}">📁 Assets</a>`:''} ${!v.menu&&!v.assets?'<span style="color:#ccc">—</span>':''}</td>
+      <td><strong style="color:${owed>0?'#e65100':'#2e7d32'}">${owed>0?fmt$(owed):'$0'}</strong></td>
+      <td><div style="display:flex;gap:5px">
+        <button class="btn btn-outline btn-sm" onclick="openVendorModal('${v.id}')">Edit</button>
+        <button class="btn btn-red btn-sm" onclick="deleteVendor('${v.id}')">✕</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── DATA CENTER ──────────────────────────────────────────────────────────────
+function renderDataCenter(){
+  const vendors=get('vendors');
+  const entries=get('apEntries');
+  const q=(document.getElementById('dc-search')?.value||'').toLowerCase();
+  const filtered=q?vendors.filter(v=>v.name.toLowerCase().includes(q)||(v.qbname||'').toLowerCase().includes(q)||(v.notes||'').toLowerCase().includes(q)):vendors;
+  const grid=document.getElementById('dc-grid');
+  const empty=document.getElementById('dc-empty');
+  if(!filtered.length){grid.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  grid.innerHTML=filtered.map(v=>{
+    const owed=entries.filter(e=>e.vendorId===v.id&&e.status!=='paid').reduce((s,e)=>s+e.amount,0);
+    const owedCount=entries.filter(e=>e.vendorId===v.id&&e.status!=='paid').length;
+    const initial=v.name.charAt(0).toUpperCase();
+    const linkIcon=url=>{try{const h=new URL(url).hostname;if(h.includes('google'))return'📁';if(h.includes('distru'))return'🛒';if(h.includes('nabis'))return'🌿';if(h.includes('apex'))return'📊';}catch(e){}return'🔗';};
+    const shortUrl=url=>{try{const u=new URL(url);return u.hostname.replace('www.','')+(u.pathname.length>20?u.pathname.slice(0,18)+'...':u.pathname);}catch(e){}return url.slice(0,35)+'...';};
+    let rows='';
+    // Banking
+    if(v.routing||v.account){
+      rows+=`<div class="dc-row"><div class="dc-row-icon">🏦</div><div class="dc-row-label">Routing</div><div class="dc-row-val mono">${v.routing||'—'}</div></div>`;
+      rows+=`<div class="dc-row"><div class="dc-row-icon">💳</div><div class="dc-row-label">Account</div><div class="dc-row-val mono">${v.account||'—'}</div></div>`;
+      if(v.bank) rows+=`<div class="dc-row"><div class="dc-row-icon">🏛️</div><div class="dc-row-label">Bank</div><div class="dc-row-val">${v.bank} · ${v.acctType||'Checking'}</div></div>`;
+    } else {
+      rows+=`<div class="dc-row"><div class="dc-row-icon">🏦</div><div class="dc-row-label">Banking</div><div class="dc-row-val" style="color:#ccc;font-style:italic">Not set — <a href="#" onclick="event.preventDefault();openVendorModal('${v.id}')">add now</a></div></div>`;
+    }
+    // Menu
+    if(v.menu){
+      rows+=`<div class="dc-row"><div class="dc-row-icon">📋</div><div class="dc-row-label">Menu</div><div class="dc-row-val"><a href="${v.menu}" target="_blank" rel="noopener">${shortUrl(v.menu)}</a></div></div>`;
+    }
+    // Assets
+    if(v.assets){
+      rows+=`<div class="dc-row"><div class="dc-row-icon">${linkIcon(v.assets)}</div><div class="dc-row-label">Assets</div><div class="dc-row-val"><a href="${v.assets}" target="_blank" rel="noopener">${shortUrl(v.assets)}</a></div></div>`;
+    }
+    // QB Account
+    if(v.invacct){
+      rows+=`<div class="dc-row"><div class="dc-row-icon">📒</div><div class="dc-row-label">QB Acct</div><div class="dc-row-val"><span class="badge badge-teal" style="font-size:10px">${v.invacct}</span></div></div>`;
+    }
+    return `<div class="dc-card">
+      <div class="dc-card-head">
+        <div class="dc-card-avatar">${initial}</div>
+        <div>
+          <div class="dc-card-name">${v.name}</div>
+          <div class="dc-card-terms">${v.terms||'Net 30'}${v.notes?' · '+v.notes:''}</div>
+        </div>
+      </div>
+      <div class="dc-card-body">${rows||'<div style="text-align:center;color:#ccc;padding:10px;font-size:12px">No info yet — <a href="#" onclick="event.preventDefault();openVendorModal(\''+v.id+'\')">edit vendor</a></div>'}</div>
+      <div class="dc-card-foot">
+        <span class="dc-ap-badge ${owed>0?'dc-ap-owed':'dc-ap-clear'}">${owed>0?fmt$(owed)+' owed ('+owedCount+')':'$0 owed'}</span>
+        ${owed>0?'<button class="btn btn-teal btn-sm" onclick="selVendors.clear();selEntries.clear();selVendors.add(\''+v.id+'\');showPage(\'pay\')">Pay</button>':''}
+        ${v.menu?'<a class="btn btn-outline btn-sm" href="'+v.menu+'" target="_blank" rel="noopener">Menu</a>':''}
+        ${v.assets?'<a class="btn btn-outline btn-sm" href="'+v.assets+'" target="_blank" rel="noopener">Assets</a>':''}
+        <button class="btn btn-outline btn-sm" onclick="openVendorModal('${v.id}')">Edit</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── JE GENERATOR ─────────────────────────────────────────────────────────────
+let jeRows=[];
+function initJE(){
+  if(!document.getElementById('je-date').value) document.getElementById('je-date').value=today();
+  if(!document.getElementById('je-memo').value){
+    const d=new Date();
+    document.getElementById('je-memo').value=`delivery ${d.getMonth()+1}/${d.getDate()}`;
+  }
+  if(jeRows.length===0){jeRows=[{id:uid()}];renderJERows();}
+}
+function addJERow(){jeRows.push({id:uid()});renderJERows();}
+function removeJERow(id){if(jeRows.length===1)return;jeRows=jeRows.filter(r=>r.id!==id);renderJERows();}
+function renderJERows(){
+  const vendors=get('vendors');
+  const vOptions=vendors.map(v=>`<option value="${v.id}">${v.name}</option>`).join('');
+  document.getElementById('je-vendor-rows').innerHTML=jeRows.map(r=>`
+    <div class="je-vendor-row" id="jer-${r.id}">
+      <select id="jv-${r.id}" style="border:1px solid #e0e0e0;border-radius:8px;padding:7px 10px;font-size:13px;outline:none;width:100%;color:#1a1a2e">
+        <option value="">Select vendor…</option>${vOptions}
+      </select>
+      <input id="ji-${r.id}" placeholder="Invoice #" style="border:1px solid #e0e0e0;border-radius:8px;padding:7px 10px;font-size:13px;outline:none;width:100%;color:#1a1a2e">
+      <input class="amount-input" id="ja-${r.id}" type="number" step="0.01" placeholder="0.00">
+      <button onclick="removeJERow('${r.id}')" style="background:#ffebee;border:1px solid #ffcdd2;color:#c62828;border-radius:6px;width:30px;height:30px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>`).join('');
+}
+function clearJE(){jeRows=[{id:uid()}];renderJERows();document.getElementById('je-output-wrap').innerHTML='';}
+function generateJE(){
+  const vendors=get('vendors');
+  const delivDate=document.getElementById('je-date').value;
+  const memo=document.getElementById('je-memo').value||`delivery ${fmtShort(delivDate)}`;
+  const rows=[];
+  let total=0;
+  for(const r of jeRows){
+    const vid=document.getElementById('jv-'+r.id)?.value;
+    const amt=parseFloat(document.getElementById('ja-'+r.id)?.value||0);
+    const inv=document.getElementById('ji-'+r.id)?.value||'';
+    if(!vid||!amt) continue;
+    const v=vendors.find(x=>x.id===vid);
+    if(!v) continue;
+    rows.push({v,amt,inv});
+    total+=amt;
+  }
+  if(!rows.length){alert('Add at least one vendor with an amount');return;}
+
+  // Build JE output
+  let lineNum=1;
+  let tableRows='';
+  const savedEntries=[];
+  for(const {v,amt,inv} of rows){
+    const invAcct=v.invacct||'INVENTORY - '+v.name.toUpperCase();
+    const apName=v.qbname||v.name;
+    tableRows+=`
+      <tr class="debit-row">
+        <td style="color:#aaa;font-size:11px">${lineNum++}</td>
+        <td class="je-inv-acct">${invAcct}</td>
+        <td class="je-amount-d">${fmt$(amt)}</td>
+        <td></td>
+        <td class="je-desc">${memo}</td>
+        <td class="je-name">${apName}</td>
+        ${inv?`<td style="color:#aaa;font-size:11px">${inv}</td>`:'<td></td>'}
+      </tr>
+      <tr class="credit-row">
+        <td style="color:#aaa;font-size:11px">${lineNum++}</td>
+        <td class="je-acct">Accounts Payable (A/P)</td>
+        <td></td>
+        <td class="je-amount-c">${fmt$(amt)}</td>
+        <td class="je-desc">${memo}</td>
+        <td class="je-name">${apName}</td>
+        ${inv?`<td style="color:#aaa;font-size:11px">${inv}</td>`:'<td></td>'}
+      </tr>`;
+    // Prepare AP entry for saving
+    savedEntries.push({v,amt,inv,delivDate});
+  }
+  tableRows+=`<tr class="je-total-row">
+    <td colspan="2" style="color:#aaa;font-size:11px">TOTAL</td>
+    <td class="je-amount-d">${fmt$(total)}</td>
+    <td class="je-amount-c">${fmt$(total)}</td>
+    <td colspan="3"></td>
+  </tr>`;
+
+  const dueDate=(d=>{const dt=new Date(d+'T12:00:00');dt.setDate(dt.getDate()+30);return dt.toISOString().split('T')[0];})(delivDate||today());
+
+  document.getElementById('je-output-wrap').innerHTML=`
+    <div class="je-output">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+        <div>
+          <h3>QuickBooks Journal Entry</h3>
+          <p>Date: ${fmtDate(delivDate)} &nbsp;·&nbsp; Memo: ${memo} &nbsp;·&nbsp; ${rows.length} vendor${rows.length>1?'s':''} &nbsp;·&nbsp; Net 30 due ${fmtDate(dueDate)}</p>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="copy-btn" onclick="copyJE()">📋 Copy as Text</button>
+          <button class="btn btn-teal btn-sm" onclick="saveJEtoAP(${JSON.stringify(savedEntries.map(e=>({vid:e.v.id,amt:e.amt,inv:e.inv,delivDate:e.delivDate})))})">💾 Save to AP Tracker</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="je-table" id="je-result-table">
+          <thead><tr><th>#</th><th>Account</th><th style="text-align:right">Debit</th><th style="text-align:right">Credit</th><th>Description</th><th>Name</th><th>Invoice #</th></tr></thead>
+          <tbody>${tableRows}</tbody>
+        </table>
+      </div>
+      <div style="margin-top:14px;padding:12px;background:rgba(255,255,255,.06);border-radius:8px;font-size:11px;color:#aaa;line-height:1.7">
+        <strong style="color:#00c9a7;display:block;margin-bottom:4px">📍 How to enter in QuickBooks:</strong>
+        + New → Journal Entry → set Date to ${fmtDate(delivDate)} → enter each line above exactly → Save and close
+      </div>
+    </div>`;
+}
+function copyJE(){
+  const vendors=get('vendors');
+  const delivDate=document.getElementById('je-date').value;
+  const memo=document.getElementById('je-memo').value||'delivery';
+  let text=`QuickBooks Journal Entry — ${fmtDate(delivDate)}\nMemo: ${memo}\n\n`;
+  text+=`#\tAccount\t\t\t\tDebit\tCredit\tDescription\tName\n`;
+  let n=1;
+  for(const r of jeRows){
+    const vid=document.getElementById('jv-'+r.id)?.value;
+    const amt=parseFloat(document.getElementById('ja-'+r.id)?.value||0);
+    const inv=document.getElementById('ji-'+r.id)?.value||'';
+    if(!vid||!amt) continue;
+    const v=vendors.find(x=>x.id===vid);
+    if(!v) continue;
+    const invAcct=v.invacct||'INVENTORY - '+v.name.toUpperCase();
+    const apName=v.qbname||v.name;
+    text+=`${n++}\t${invAcct}\t\t${fmt$(amt)}\t\t${memo}\t${apName}\n`;
+    text+=`${n++}\tAccounts Payable (A/P)\t\t\t${fmt$(amt)}\t${memo}\t${apName}\n`;
+  }
+  navigator.clipboard?.writeText(text).then(()=>alert('Copied to clipboard!')).catch(()=>prompt('Copy this:',text));
+}
+function saveJEtoAP(entries){
+  const existing=get('apEntries');
+  const vendors=get('vendors');
+  for(const e of entries){
+    const v=vendors.find(x=>x.id===e.vid);
+    const dueDate=(d=>{const dt=new Date(d+'T12:00:00');dt.setDate(dt.getDate()+30);return dt.toISOString().split('T')[0];})(e.delivDate||today());
+    existing.push({id:uid(),vendorId:e.vid,invoiceNum:e.inv,date:e.delivDate,dueDate,amount:e.amt,status:'unpaid'});
+  }
+  set('apEntries',existing);
+  alert(`✅ Saved ${entries.length} entries to AP Tracker. Payment due ${new Date(new Date(entries[0].delivDate+'T12:00:00').getTime()+30*86400000).toLocaleDateString('en-US',{month:'2-digit',day:'2-digit',year:'numeric'})}.`);
+  showPage('ap');
+}
+
+// ── AP TRACKER ────────────────────────────────────────────────────────────────
+let editAPId=null;
+function openAPModal(id){
+  editAPId=id||null;
+  document.getElementById('ap-modal-title').textContent=id?'Edit AP Entry':'Add AP Entry';
+  const e=id?get('apEntries').find(x=>x.id===id):{};
+  const vendors=get('vendors');
+  document.getElementById('b-vendor').innerHTML=vendors.map(v=>`<option value="${v.id}">${v.name}</option>`).join('');
+  document.getElementById('b-inv').value=e?.invoiceNum||'';
+  document.getElementById('b-date').value=e?.date||today();
+  document.getElementById('b-amount').value=e?.amount||'';
+  document.getElementById('b-due').value=e?.dueDate||'';
+  document.getElementById('b-status').value=e?.status||'unpaid';
+  if(e?.vendorId) document.getElementById('b-vendor').value=e.vendorId;
+  document.getElementById('b-date').oninput=autoFillDue;
+  if(!id) autoFillDue();
+  document.getElementById('ap-modal').classList.add('open');
+}
+function autoFillDue(){
+  const d=document.getElementById('b-date').value;if(!d)return;
+  const due=new Date(d+'T12:00:00');due.setDate(due.getDate()+30);
+  document.getElementById('b-due').value=due.toISOString().split('T')[0];
+}
+function saveAP(){
+  const vid=document.getElementById('b-vendor').value;
+  const amt=parseFloat(document.getElementById('b-amount').value);
+  if(!vid||!amt){alert('Vendor and amount required');return;}
+  const entries=get('apEntries');
+  const obj={id:editAPId||uid(),vendorId:vid,invoiceNum:document.getElementById('b-inv').value.trim(),
+    date:document.getElementById('b-date').value,dueDate:document.getElementById('b-due').value,
+    amount:amt,status:document.getElementById('b-status').value};
+  if(editAPId){const i=entries.findIndex(x=>x.id===editAPId);entries[i]=obj;}else entries.push(obj);
+  set('apEntries',entries);closeModal('ap-modal');renderAP();
+}
+function deleteAP(id){if(!confirm('Delete entry?'))return;set('apEntries',get('apEntries').filter(x=>x.id!==id));renderAP();}
+function markAPPaid(id){const e=get('apEntries');const i=e.findIndex(x=>x.id===id);if(i>=0){e[i].status='paid';set('apEntries',e);renderAP();}}
+function renderAP(){
+  const vendors=get('vendors');
+  const fv=document.getElementById('ap-filter-vendor').value;
+  const fs=document.getElementById('ap-filter-status').value;
+  const cur=document.getElementById('ap-filter-vendor').value;
+  document.getElementById('ap-filter-vendor').innerHTML='<option value="">All Vendors</option>'+vendors.map(v=>`<option value="${v.id}">${v.name}</option>`).join('');
+  document.getElementById('ap-filter-vendor').value=cur;
+  let entries=get('apEntries');
+  if(fv) entries=entries.filter(e=>e.vendorId===fv);
+  if(fs) entries=entries.filter(e=>e.status===fs);
+  entries.sort((a,b)=>(a.dueDate||'9999').localeCompare(b.dueDate||'9999'));
+  const tbody=document.getElementById('ap-tbody');
+  if(!entries.length){tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:24px;color:#aaa">No AP entries found</td></tr>';return;}
+  tbody.innerHTML=entries.map(e=>{
+    const v=vendors.find(x=>x.id===e.vendorId);
+    const d=daysDiff(e.dueDate);
+    let daybadge='';
+    if(d!==null){
+      if(d<0) daybadge=`<span class="badge badge-red">${Math.abs(d)}d overdue</span>`;
+      else if(d===0) daybadge=`<span class="badge badge-orange">TODAY</span>`;
+      else if(d<=7) daybadge=`<span class="badge badge-orange">${d}d</span>`;
+      else daybadge=`<span class="badge badge-gray">${d}d</span>`;
+    }
+    const sb={unpaid:'badge-red',paid:'badge-green'}[e.status];
+    return `<tr class="${d<0&&e.status!=='paid'?'overdue-row':''}">
+      <td><strong>${v?.name||'?'}</strong></td>
+      <td style="font-size:11px;color:#888">${e.invoiceNum||'—'}</td>
+      <td>${fmtDate(e.date)}</td>
+      <td>${fmtDate(e.dueDate)}</td>
+      <td>${daybadge}</td>
+      <td style="text-align:right"><strong>${fmt$(e.amount)}</strong></td>
+      <td><span class="badge badge-teal" style="font-size:10px;font-family:monospace">${v?.invacct||'—'}</span></td>
+      <td><span class="badge ${sb}">${e.status}</span></td>
+      <td><div style="display:flex;gap:4px">
+        <button class="btn btn-outline btn-sm" onclick="openAPModal('${e.id}')">Edit</button>
+        ${e.status!=='paid'?`<button class="btn btn-green btn-sm" onclick="markAPPaid('${e.id}')">✓ Paid</button>`:''}
+        <button class="btn btn-red btn-sm" onclick="deleteAP('${e.id}')">✕</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── QB IMPORT ─────────────────────────────────────────────────────────────────
+function openQBModal(){document.getElementById('qb-modal').classList.add('open');document.getElementById('qb-import-result').textContent='';}
+function importCSV(){
+  const raw=document.getElementById('qb-csv').value.trim();
+  if(!raw){alert('Paste CSV data first');return;}
+  const lines=raw.split('\n').map(l=>l.trim()).filter(Boolean);
+  const vendors=get('vendors');
+  const entries=get('apEntries');
+  let added=0,skipped=0;
+  const start=lines[0].toLowerCase().includes('vendor')?1:0;
+  for(let i=start;i<lines.length;i++){
+    const parts=lines[i].split(',').map(s=>s.replace(/^"|"$/g,'').trim());
+    if(parts.length<5){skipped++;continue;}
+    const [vname,inv,dateStr,dueStr,amtStr]=parts;
+    const v=vendors.find(x=>x.name.toLowerCase()===vname.toLowerCase()||x.qbname?.toLowerCase()===vname.toLowerCase());
+    if(!v){skipped++;continue;}
+    const parseDate=s=>{const p=s.split('/');return p.length===3?`${p[2]}-${p[0].padStart(2,'0')}-${p[1].padStart(2,'0')}`:s;};
+    const amt=parseFloat(amtStr.replace(/[^0-9.]/g,''));
+    if(!amt||isNaN(amt)){skipped++;continue;}
+    if(entries.find(e=>e.vendorId===v.id&&e.invoiceNum===inv)){skipped++;continue;}
+    entries.push({id:uid(),vendorId:v.id,invoiceNum:inv,date:parseDate(dateStr),dueDate:parseDate(dueStr),amount:amt,status:'unpaid'});
+    added++;
+  }
+  set('apEntries',entries);
+  const res=document.getElementById('qb-import-result');
+  res.style.color=added>0?'#2e7d32':'#c62828';
+  res.textContent=`✓ Imported ${added} entries.${skipped>0?` ${skipped} rows skipped (vendor not found or duplicate).`:''}`;
+  if(added>0) renderAP();
+}
+
+// ── PAY VENDORS ───────────────────────────────────────────────────────────────
+let selVendors=new Set(),selEntries=new Set();
+function renderPayPage(){
+  document.getElementById('pay-date').value=today();
+  const vendors=get('vendors');
+  const entries=get('apEntries').filter(e=>e.status!=='paid');
+  const vlist=document.getElementById('vendor-pick-list');
+  if(!vendors.length){vlist.innerHTML='<div class="empty-state"><p>No vendors yet</p></div>';return;}
+  vlist.innerHTML=vendors.map(v=>{
+    const owed=entries.filter(e=>e.vendorId===v.id).reduce((s,e)=>s+e.amount,0);
+    const checked=selVendors.has(v.id);
+    return `<div class="vendor-pick-item ${checked?'selected':''}" onclick="toggleVendor('${v.id}')">
+      <input type="checkbox" ${checked?'checked':''} onclick="event.stopPropagation();toggleVendor('${v.id}')">
+      <div><div class="vendor-pick-name">${v.name}</div>
+        ${owed>0?`<div class="vendor-pick-owed">${fmt$(owed)} owed</div><div style="font-size:10px;color:#aaa;font-family:monospace">${v.routing?'Rtn: '+v.routing.slice(-4)+'…':''}</div>`:'<div style="font-size:11px;color:#aaa">No open AP</div>'}
+      </div>
+    </div>`;
+  }).join('');
+  renderAPPickArea();
+}
+function toggleVendor(id){
+  if(selVendors.has(id)){selVendors.delete(id);selEntries=new Set([...selEntries].filter(eid=>{const e=get('apEntries').find(x=>x.id===eid);return e&&e.vendorId!==id;}));}
+  else selVendors.add(id);
+  renderPayPage();
+}
+function clearVendorSel(){selVendors.clear();selEntries.clear();renderPayPage();}
+function toggleEntry(id){if(selEntries.has(id))selEntries.delete(id);else selEntries.add(id);renderAPPickArea();renderBatchSummary();}
+function selectAllAP(){
+  get('apEntries').filter(e=>e.status!=='paid'&&selVendors.has(e.vendorId)).forEach(e=>selEntries.add(e.id));
+  renderAPPickArea();renderBatchSummary();
+}
+function renderAPPickArea(){
+  const area=document.getElementById('ap-pick-area');
+  if(!selVendors.size){area.innerHTML='<div class="empty-state"><div class="icon">👈</div><p>Select vendors on the left</p></div>';renderBatchSummary();return;}
+  const vendors=get('vendors');
+  const allEntries=get('apEntries').filter(e=>e.status!=='paid'&&selVendors.has(e.vendorId));
+  if(!allEntries.length){area.innerHTML='<div class="empty-state"><p>No open AP for selected vendors</p></div>';renderBatchSummary();return;}
+  let html='';
+  for(const vid of selVendors){
+    const v=vendors.find(x=>x.id===vid);
+    const vEntries=allEntries.filter(e=>e.vendorId===vid).sort((a,b)=>(a.dueDate||'').localeCompare(b.dueDate||''));
+    if(!vEntries.length) continue;
+    html+=`<div style="padding:7px 16px;background:#f9f9f9;font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #f0f0f0">${v?.name}</div>`;
+    html+=vEntries.map(e=>{
+      const d=daysDiff(e.dueDate);
+      const sel=selEntries.has(e.id);
+      const badge=d<0?`<span class="badge badge-red">${Math.abs(d)}d overdue</span>`:d===0?`<span class="badge badge-orange">TODAY</span>`:`<span class="badge badge-gray">${d}d</span>`;
+      return `<div class="bill-pick-item ${sel?'selected-bill':''}" onclick="toggleEntry('${e.id}')">
+        <input type="checkbox" ${sel?'checked':''} onclick="event.stopPropagation();toggleEntry('${e.id}')">
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <strong style="font-size:13px">${e.invoiceNum||'Invoice'}</strong>
+            <span style="font-size:11px;color:#888">delivery ${fmtDate(e.date)} · due ${fmtDate(e.dueDate)}</span>
+            ${badge}
+          </div>
+        </div>
+        <strong style="color:#1a1a2e;white-space:nowrap">${fmt$(e.amount)}</strong>
+      </div>`;
+    }).join('');
+  }
+  area.innerHTML=html;
+  renderBatchSummary();
+}
+function renderBatchSummary(){
+  const wrap=document.getElementById('batch-summary-wrap');
+  const actions=document.getElementById('pay-actions');
+  if(!selEntries.size){wrap.innerHTML='';actions.innerHTML='';return;}
+  const vendors=get('vendors');
+  const allEntries=get('apEntries');
+  const picked=[...selEntries].map(id=>allEntries.find(e=>e.id===id)).filter(Boolean);
+  const total=picked.reduce((s,e)=>s+e.amount,0);
+  const byV={};
+  picked.forEach(e=>{if(!byV[e.vendorId])byV[e.vendorId]={entries:[],total:0};byV[e.vendorId].entries.push(e);byV[e.vendorId].total+=e.amount;});
+  let rows='';
+  for(const[vid,data] of Object.entries(byV)){
+    const v=vendors.find(x=>x.id===vid);
+    const invList=data.entries.map(e=>e.invoiceNum).filter(Boolean).join(', ')||'—';
+    rows+=`<div class="batch-row">
+      <div class="batch-vendor">${v?.name||'?'}</div>
+      <div class="batch-bank">${v?.bank||''} · ${v?.acctType||''}</div>
+      <div class="batch-routing">Routing: ${v?.routing||'—'} · Acct: ${v?.account||'—'}</div>
+      <div style="font-size:10px;color:#aaa;margin-top:2px">Invoices: ${invList}</div>
+      <div class="batch-amount-line"><span style="font-size:11px;color:#aaa">${data.entries.length} entr${data.entries.length>1?'ies':'y'}</span><span class="batch-amount">${fmt$(data.total)}</span></div>
+    </div>`;
+  }
+  wrap.innerHTML=`<div class="batch-summary"><h3>📋 Batch Payment Summary — First Central Savings Bank</h3>${rows}<div class="batch-total-row"><span>Total ACH Batch</span><span>${fmt$(total)}</span></div></div>`;
+  actions.innerHTML=`<button class="btn btn-teal" onclick="processBatch()">✅ Record Payment &amp; Mark Paid</button><button class="btn btn-outline" onclick="printBatch()">🖨️ Print</button>`;
+}
+function processBatch(){
+  if(!selEntries.size) return;
+  if(!confirm(`Mark ${selEntries.size} AP entries as paid?`)) return;
+  const entries=get('apEntries');
+  const history=get('payHistory');
+  const vendors=get('vendors');
+  const picked=[...selEntries].map(id=>entries.find(e=>e.id===id)).filter(Boolean);
+  const date=document.getElementById('pay-date').value||today();
+  const ref=document.getElementById('pay-ref').value||'ACH-'+Date.now().toString().slice(-5);
+  const byV={};
+  picked.forEach(e=>{if(!byV[e.vendorId])byV[e.vendorId]={entries:[],total:0};byV[e.vendorId].entries.push({inv:e.invoiceNum,amt:e.amount});byV[e.vendorId].total+=e.amount;});
+  history.unshift({id:uid(),date,ref,total:picked.reduce((s,e)=>s+e.amount,0),vendors:Object.entries(byV).map(([vid,d])=>({name:vendors.find(x=>x.id===vid)?.name||'?',...d}))});
+  set('payHistory',history);
+  picked.forEach(e=>{const i=entries.findIndex(x=>x.id===e.id);if(i>=0)entries[i].status='paid';});
+  set('apEntries',entries);
+  selVendors.clear();selEntries.clear();
+  alert(`✅ ${picked.length} AP entries marked as paid.\n\nIn QuickBooks: the AP balance for these vendors will clear once you record the corresponding payment against those journal entry credits.`);
+  showPage('history');
+}
+function printBatch(){
+  const s=document.getElementById('batch-summary-wrap');
+  if(!s?.textContent.trim()) return;
+  const w=window.open('','_blank');
+  w.document.write(`<html><head><title>ACH Batch</title><style>body{font-family:Arial,sans-serif;padding:30px;color:#1a1a2e}h2{margin-bottom:4px}p{color:#888;font-size:13px;margin-bottom:20px}.row{padding:12px 0;border-bottom:1px solid #eee;font-size:13px}</style></head><body><h2>ACH Batch Payment — Woodhaven Cannabis</h2><p>Date: ${document.getElementById('pay-date').value} · Ref: ${document.getElementById('pay-ref').value||'—'} · Bank: First Central Savings Bank</p>${s.innerText}</body></html>`);
+  w.print();
+}
+
+// ── HISTORY ───────────────────────────────────────────────────────────────────
+function renderHistory(){
+  const history=get('payHistory');
+  const el=document.getElementById('history-list');
+  if(!history.length){el.innerHTML='<div class="empty-state" style="padding:40px"><div class="icon">📭</div><p>No payment history yet</p></div>';return;}
+  el.innerHTML=history.map(h=>`
+    <div style="padding:14px 18px;border-bottom:1px solid #f5f5f5">
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px">
+        <strong>${fmtDate(h.date)}</strong>
+        <span class="badge badge-gray">Ref: ${h.ref}</span>
+        <strong style="color:#009688">${fmt$(h.total)}</strong>
+      </div>
+      ${h.vendors.map(v=>`<div style="font-size:12px;color:#888;margin-top:3px">• ${v.name}: ${fmt$(v.total)} (${v.entries.map(e=>e.inv).filter(Boolean).join(', ')||'—'})</div>`).join('')}
+    </div>`).join('');
+}
+function clearHistory(){set('payHistory',[]);renderHistory();}
+
+// ── QB JSON IMPORT ────────────────────────────────────────────────────────────
+let _qbJsonData = null;
+
+function openQBJsonModal(){
+  _qbJsonData = null;
+  document.getElementById('qbj-preview').style.display='none';
+  document.getElementById('qbj-import-btn').style.display='none';
+  document.getElementById('qbj-result').textContent='';
+  document.getElementById('qbj-file-input').value='';
+  document.getElementById('qbj-modal').classList.add('open');
+}
+
+function previewQBJson(input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try {
+      const data = JSON.parse(e.target.result);
+      _qbJsonData = data;
+
+      const qbVendors  = data.vendors  || [];
+      const qbAccounts = data.accounts || [];
+      const apAging    = data.ap_aging || [];
+      const syncedAt   = data.synced_at ? new Date(data.synced_at).toLocaleString() : 'unknown';
+
+      // Build inventory account lookup: try to match "INVENTORY - [vendorName]" or similar
+      const invAcctMap = {};
+      qbAccounts.forEach(a => {
+        const nm = a.name.toUpperCase();
+        if(nm.startsWith('INVENTORY') || a.subtype === 'Inventory'){
+          // strip "INVENTORY - " or "INVENTORY-" prefix to get vendor portion
+          const stripped = nm.replace(/^INVENTORY\s*[-–]\s*/,'').trim();
+          invAcctMap[stripped] = a.name;  // key = vendor name portion, value = full account name
+        }
+      });
+
+      // Build AP aging lookup: vendor name → balance
+      const apBalanceMap = {};
+      apAging.forEach(row => {
+        const vname = (row['Vendor'] || row['Name'] || '').trim();
+        const bal = parseFloat((row['Amount'] || row['Open Balance'] || '').replace(/[^0-9.-]/g,'')) || 0;
+        if(vname) apBalanceMap[vname] = (apBalanceMap[vname]||0) + bal;
+      });
+
+      // Active vendors only
+      const activeVendors = qbVendors.filter(v => v.active !== false);
+
+      // Build preview list
+      const existingVendors = get('vendors');
+      let html = '';
+      let newCount = 0, updateCount = 0;
+
+      activeVendors.forEach(qv => {
+        const existIdx = existingVendors.findIndex(ev =>
+          ev.qbname?.toLowerCase() === qv.name.toLowerCase() ||
+          ev.name.toLowerCase() === qv.name.toLowerCase()
+        );
+        const isNew = existIdx === -1;
+        if(isNew) newCount++; else updateCount++;
+
+        // Try to find matching inventory account
+        const nameUpper = qv.name.toUpperCase();
+        let matchedAcct = invAcctMap[nameUpper] || '';
+        if(!matchedAcct){
+          // fuzzy: check if any inv acct key is contained in vendor name or vice versa
+          for(const [k,v] of Object.entries(invAcctMap)){
+            if(nameUpper.includes(k) || k.includes(nameUpper)){ matchedAcct=v; break; }
+          }
+        }
+        const balance = apBalanceMap[qv.name] || 0;
+        const terms = qv.terms || 'Net 30';
+        const badge = isNew
+          ? '<span style="background:#e8f5e9;color:#2e7d32;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700">NEW</span>'
+          : '<span style="background:#e3f2fd;color:#1565c0;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700">UPDATE</span>';
+
+        html += `<div style="padding:9px 12px;border-bottom:1px solid #f5f5f5;display:flex;align-items:center;gap:10px">
+          ${badge}
+          <div style="flex:1">
+            <strong style="font-size:13px">${qv.name}</strong>
+            <span style="font-size:10px;color:#aaa;margin-left:6px">· ${terms}${balance>0?' · QB Balance: $'+balance.toFixed(2):''}</span>
+            ${matchedAcct?`<div style="font-size:10px;color:#00796b;margin-top:2px">📒 ${matchedAcct}</div>`:'<div style="font-size:10px;color:#e65100;margin-top:2px">⚠️ No inventory account found — add manually</div>'}
+          </div>
+        </div>`;
+      });
+
+      document.getElementById('qbj-preview-list').innerHTML = html ||
+        '<div style="padding:16px;text-align:center;color:#aaa">No active vendors found in this file</div>';
+      document.getElementById('qbj-preview').style.display='block';
+      document.getElementById('qbj-import-btn').style.display='inline-flex';
+      document.getElementById('qbj-result').innerHTML =
+        `<span style="color:#555">QB sync: ${syncedAt} · <strong>${activeVendors.length}</strong> vendors · `+
+        `<strong style="color:#2e7d32">${newCount} new</strong>, `+
+        `<strong style="color:#1565c0">${updateCount} updates</strong></span>`;
+
+    } catch(err){
+      document.getElementById('qbj-result').innerHTML =
+        '<span style="color:#c62828">❌ Could not read file. Make sure it\'s the qb_export.json from qb_sync.py</span>';
+    }
+  };
+  reader.readAsText(file);
+}
+
+function doImportQBJson(){
+  if(!_qbJsonData){ alert('No file loaded'); return; }
+
+  const qbVendors  = (_qbJsonData.vendors  || []).filter(v=>v.active!==false);
+  const qbAccounts = _qbJsonData.accounts  || [];
+  const apAging    = _qbJsonData.ap_aging  || [];
+
+  // Build inventory account lookup
+  const invAcctMap = {};
+  qbAccounts.forEach(a => {
+    const nm = a.name.toUpperCase();
+    if(nm.startsWith('INVENTORY') || a.subtype === 'Inventory'){
+      const stripped = nm.replace(/^INVENTORY\s*[-–]\s*/,'').trim();
+      invAcctMap[stripped] = a.name;
+    }
+  });
+
+  const existingVendors = get('vendors');
+  let added=0, updated=0;
+
+  qbVendors.forEach(qv => {
+    const nameUpper = qv.name.toUpperCase();
+    let matchedAcct = invAcctMap[nameUpper] || '';
+    if(!matchedAcct){
+      for(const [k,v] of Object.entries(invAcctMap)){
+        if(nameUpper.includes(k)||k.includes(nameUpper)){ matchedAcct=v; break; }
+      }
+    }
+
+    const existIdx = existingVendors.findIndex(ev =>
+      ev.qbname?.toLowerCase()===qv.name.toLowerCase()||ev.name.toLowerCase()===qv.name.toLowerCase()
+    );
+
+    if(existIdx === -1){
+      // New vendor — create with QB data, leave banking fields blank
+      existingVendors.push({
+        id: uid(),
+        name: qv.name,
+        qbname: qv.name,
+        qb_id: qv.qb_id,
+        invacct: matchedAcct,
+        bank: '',
+        routing: '',
+        account: '',
+        terms: qv.terms||'Net 30',
+        acctType: 'Checking',
+        notes: qv.email ? `QB: ${qv.email}` : '',
+      });
+      added++;
+    } else {
+      // Update QB name + inventory account (don't overwrite banking info user entered)
+      existingVendors[existIdx].qbname = qv.name;
+      existingVendors[existIdx].qb_id  = qv.qb_id;
+      if(matchedAcct && !existingVendors[existIdx].invacct)
+        existingVendors[existIdx].invacct = matchedAcct;
+      if(!existingVendors[existIdx].terms)
+        existingVendors[existIdx].terms = qv.terms||'Net 30';
+      updated++;
+    }
+  });
+
+  set('vendors', existingVendors);
+  closeModal('qbj-modal');
+  renderVendors();
+  alert(`✅ QuickBooks import complete!\n\n  ${added} new vendors added\n  ${updated} existing vendors updated\n\nNext: click "Edit" on each vendor to add their ACH routing & account numbers.`);
+}
+
+// ── MODALS ────────────────────────────────────────────────────────────────────
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-backdrop').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
+
+// ── SEED VENDOR DATA (runs once on first visit) ─────────────────────────────
+function seedVendors(){
+  if(localStorage.getItem('vendors_seeded')) return;
+  const existing=get('vendors');
+  if(existing.length>0){localStorage.setItem('vendors_seeded','1');return;}
+  const seed=[
+    {name:'MFNY',routing:'221972234',account:'99419668',menu:'',assets:'',terms:'Net 30',bank:'',notes:''},
+    {name:'Fernway',routing:'021414468',account:'50090558',menu:'',assets:'https://drive.google.com/drive/folders/retailer-sales-kit-ny',terms:'Net 30',bank:'',notes:''},
+    {name:'Rythm',routing:'021201383',account:'42883326',menu:'',assets:'https://dam.gti.com',terms:'Net 30',bank:'',notes:'GTI brand'},
+    {name:'Rolling Green',routing:'',account:'',menu:'',assets:'https://app.distru.com/menu/greener-standards-inc-metrc/greener-standards-main-menu',terms:'Net 30',bank:'',notes:''},
+    {name:'Ruby',routing:'211373539',account:'592390894',menu:'',assets:'https://app.apextrading.com/profile/kingston-reserve-dba-ruby-farms',terms:'Net 30',bank:'',notes:'Kingston Reserve DBA Ruby Farms'},
+    {name:'Bonanza',routing:'322070381',account:'8420018155',menu:'',assets:'',terms:'Net 30',bank:'',notes:'Nabis vendor'},
+    {name:'Edie Parker',routing:'',account:'',menu:'',assets:'',terms:'Net 30',bank:'',notes:'Menu Descriptions and Menu Images'},
+    {name:'1off Brands',routing:'021213520',account:'4501400412',menu:'',assets:'https://drive.google.com/drive/folders/brand-digital-assets',terms:'Net 30',bank:'',notes:''},
+    {name:'Jaunty',routing:'',account:'',menu:'',assets:'',terms:'Net 30',bank:'',notes:''},
+    {name:'Umamii',routing:'211383066',account:'52966177',menu:'https://umamii.com/live-menu',assets:'https://umamii.com/live-menu',terms:'Net 30',bank:'',notes:''},
+    {name:'JIVE',routing:'221375802',account:'221375802',menu:'',assets:'',terms:'Net 30',bank:'',notes:''},
+    {name:'Heavy Hitters',routing:'221375802',account:'15997520106',menu:'',assets:'',terms:'Net 30',bank:'',notes:''},
+    {name:'Alchemy Pure LLC',routing:'221972234',account:'99396163',menu:'',assets:'',terms:'Net 30',bank:'',notes:''},
+    {name:'Hepworth',routing:'322070381',account:'8420018155',menu:'',assets:'',terms:'Net 30',bank:'',notes:''},
+    {name:'Old Pal',routing:'',account:'',menu:'',assets:'',terms:'Net 30',bank:'',notes:''},
+    {name:'EATON',routing:'',account:'',menu:'',assets:'',terms:'Net 30',bank:'',notes:''},
+    {name:'AYRLOOM',routing:'021052053',account:'17237286',menu:'',assets:'',terms:'Net 30',bank:'JOINT UPIC ACCOUNT',notes:''},
+    {name:'Breakfast',routing:'021300912',account:'34479791',menu:'',assets:'',terms:'Net 30',bank:'TRUSTCO BANK',notes:''},
+    {name:'Nanticoke',routing:'021308642',account:'880067985',menu:'',assets:'',terms:'Net 30',bank:'TIOGA STATE BANK N.A.',notes:''},
+    {name:'Curaleaf',routing:'211373539',account:'591883197',menu:'',assets:'',terms:'Net 30',bank:'',notes:''},
+  ];
+  const vendors=seed.map(s=>({id:uid(),qbname:s.name,invacct:'INVENTORY - '+s.name.toUpperCase(),acctType:'Checking',...s}));
+  set('vendors',vendors);
+  localStorage.setItem('vendors_seeded','1');
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+if(!localStorage.getItem('payHistory')) set('payHistory',[]);
+if(!localStorage.getItem('apEntries')) set('apEntries',[]);
+if(!localStorage.getItem('vendors')) set('vendors',[]);
+seedVendors();
+renderDashboard();
+</script>
+</body>
+</html>

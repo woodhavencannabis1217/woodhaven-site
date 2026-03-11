@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Woodhaven">
+<meta name="theme-color" content="#1a1a2e">
+<title>Woodhaven Cannabis — Staff Tools</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{height:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:#f0f2f5;min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+
+.header{
+  background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);
+  color:#fff;padding:32px 20px 28px;text-align:center;
+  box-shadow:0 2px 16px rgba(0,0,0,.35);
+}
+.logo{font-size:36px;margin-bottom:8px}
+.header h1{font-size:20px;font-weight:800;letter-spacing:.3px}
+.header p{font-size:12px;opacity:.5;margin-top:4px}
+
+.content{padding:20px;max-width:480px;margin:0 auto}
+
+.app-card{
+  background:#fff;border-radius:16px;
+  box-shadow:0 2px 12px rgba(0,0,0,.08);
+  margin-bottom:14px;overflow:hidden;
+  cursor:pointer;transition:transform .12s,box-shadow .12s;
+  text-decoration:none;display:block;color:inherit;
+}
+.app-card:active{transform:scale(.97);box-shadow:0 1px 6px rgba(0,0,0,.1)}
+
+.app-card-inner{display:flex;align-items:center;gap:14px;padding:18px 16px}
+.app-icon{
+  width:52px;height:52px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;flex-shrink:0;
+}
+.app-icon.green{background:#e0f7f4;color:#00c9a7}
+.app-icon.blue{background:#e3f2fd;color:#1565c0}
+
+.app-name{font-size:15px;font-weight:700;color:#1a1a2e}
+.app-desc{font-size:12px;color:#888;margin-top:2px;line-height:1.4}
+.app-badge{
+  font-size:10px;font-weight:700;padding:2px 8px;
+  border-radius:20px;margin-top:6px;display:inline-block;
+}
+.badge-staff{background:#e0f7f4;color:#00897b}
+.badge-owner{background:#fff3e0;color:#e65100}
+
+.arrow{
+  font-size:20px;color:#ccc;flex-shrink:0;margin-left:auto;padding-right:4px;
+}
+
+.footer{
+  text-align:center;padding:24px 20px;
+  font-size:11px;color:#bbb;line-height:1.6;
+}
+.footer a{color:#00c9a7;text-decoration:none;font-weight:600}
+
+.install-hint{
+  background:linear-gradient(135deg,#00c9a7,#00b894);
+  color:#fff;border-radius:14px;padding:14px 16px;
+  margin-bottom:16px;font-size:13px;line-height:1.5;
+  display:none;
+}
+.install-hint strong{display:block;margin-bottom:4px;font-size:14px}
+.install-dismiss{
+  background:rgba(255,255,255,.25);border:none;color:#fff;
+  border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;
+  cursor:pointer;margin-top:8px;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">🌿</div>
+  <h1>Woodhaven Cannabis</h1>
+  <p>Staff Tools</p>
+</div>
+
+<div class="content">
+
+  <div class="install-hint" id="install-hint">
+    <strong>📱 Install as an app</strong>
+    Tap <strong>Share (↑)</strong> then <strong>"Add to Home Screen"</strong> for the best experience.
+    <br>
+    <button class="install-dismiss" onclick="dismissHint()">Got it</button>
+  </div>
+
+  <a class="app-card" href="delivery.html">
+    <div class="app-card-inner">
+      <div class="app-icon green">📦</div>
+      <div>
+        <div class="app-name">Delivery Checklist</div>
+        <div class="app-desc">METRC, POS, photos, invoice scan → auto QuickBooks journal entry</div>
+        <span class="app-badge badge-staff">STAFF</span>
+      </div>
+      <div class="arrow">›</div>
+    </div>
+  </a>
+
+  <a class="app-card" href="ap.html">
+    <div class="app-card-inner">
+      <div class="app-icon blue">💰</div>
+      <div>
+        <div class="app-name">AP Payment Manager</div>
+        <div class="app-desc">Track vendor invoices, payments, aging &amp; cash flow</div>
+        <span class="app-badge badge-owner">OWNER</span>
+      </div>
+      <div class="arrow">›</div>
+    </div>
+  </a>
+
+</div>
+
+<div class="footer">
+  Woodhaven Cannabis · Staff Tools<br>
+  <a href="https://woodhavencannabis.com">woodhavencannabis.com</a>
+</div>
+
+<script>
+var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+var dismissed = localStorage.getItem('wh_home_hint_dismissed');
+if (!isStandalone && !dismissed && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+  document.getElementById('install-hint').style.display = 'block';
+}
+function dismissHint() {
+  localStorage.setItem('wh_home_hint_dismissed', '1');
+  document.getElementById('install-hint').style.display = 'none';
+}
+</script>
+</body>
+</html>

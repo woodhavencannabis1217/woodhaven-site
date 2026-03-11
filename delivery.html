@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="WH Delivery">
+<meta name="theme-color" content="#1a1a2e">
+<title>WH Delivery Checklist</title>
+
+
+<style>
+:root {
+  --navy: #1a1a2e;
+  --teal: #00c9a7;
+  --teal-light: #e0f7f4;
+  --orange: #e65100;
+  --red: #c62828;
+  --green: #2e7d32;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { height: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #f0f2f5;
+  min-height: 100vh;
+  padding-bottom: 80px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ══ INSTALL BANNER ═══════════════════════════════════════════════ */
+.install-banner {
+  background: var(--teal);
+  color: white;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.install-banner span { flex: 1; }
+.install-dismiss {
+  background: rgba(255,255,255,0.25);
+  border: none;
+  color: white;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ══ HEADER ═══════════════════════════════════════════════════════ */
+.header {
+  background: linear-gradient(135deg, var(--navy) 0%, #16213e 100%);
+  color: white;
+  padding: 18px 16px 14px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.35);
+}
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+.header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.3px; }
+.header p  { font-size: 11px; opacity: 0.55; }
+
+.settings-btn {
+  background: rgba(255,255,255,0.12);
+  border: none;
+  color: white;
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.meta-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.meta-input { flex: 1; min-width: 100px; }
+.meta-input label {
+  font-size: 10px; opacity: 0.65; display: block;
+  margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.meta-input input {
+  width: 100%;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 8px;
+  color: white;
+  padding: 8px 10px;
+  font-size: 14px;
+  outline: none;
+}
+.meta-input input::placeholder { color: rgba(255,255,255,0.3); }
+.meta-input input:focus { border-color: var(--teal); background: rgba(255,255,255,0.18); }
+
+.progress-wrap {
+  background: rgba(255,255,255,0.13);
+  border-radius: 999px;
+  height: 5px;
+  margin-top: 13px;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--teal), #00e5c5);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+  width: 0%;
+}
+.progress-label { font-size: 10px; opacity: 0.6; margin-top: 5px; text-align: right; }
+
+/* ══ CONTENT ══════════════════════════════════════════════════════ */
+.content { padding: 14px; max-width: 640px; margin: 0 auto; }
+
+/* ══ SECTIONS ═════════════════════════════════════════════════════ */
+.section {
+  background: white;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.07);
+}
+.section-header {
+  padding: 13px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.sec-icon {
+  width: 32px; height: 32px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0;
+}
+.sec-title { font-size: 13px; font-weight: 700; color: var(--navy); flex: 1; }
+.sec-count { font-size: 12px; color: #888; font-weight: 500; }
+
+.s1 .sec-icon { background: #e8f5e9; }
+.s2 .sec-icon { background: #fff3e0; }
+.s3 .sec-icon { background: #ede7f6; }
+.s4 .sec-icon { background: #e0f2f1; }
+
+/* ══ TASKS ════════════════════════════════════════════════════════ */
+.task {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 13px 14px;
+  border-bottom: 1px solid #f5f5f5;
+  cursor: pointer;
+  transition: background 0.12s;
+  min-height: 50px;
+}
+.task:last-child { border-bottom: none; }
+.task:active { background: #f5f5f5; }
+.task.done .task-text { text-decoration: line-through; color: #bbb; }
+.task.done .task-note { color: #ccc; }
+
+.chk {
+  width: 24px; height: 24px;
+  border-radius: 7px;
+  border: 2px solid #ddd;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.18s;
+  background: white;
+}
+.task.done .chk { background: var(--teal); border-color: var(--teal); }
+.chk svg { display: none; }
+.task.done .chk svg { display: block; }
+
+.task-text { font-size: 14px; color: var(--navy); font-weight: 500; line-height: 1.4; }
+.task-note { font-size: 11px; color: #999; margin-top: 3px; line-height: 1.4; }
+.badge-compliance {
+  font-size: 9px; background: #fff0f0; color: #e53935;
+  border: 1px solid #ffcdd2; border-radius: 4px; padding: 1px 5px;
+  font-weight: 700; margin-top: 3px; display: inline-block;
+}
+.badge-sku {
+  font-size: 9px; background: #fff8e1; color: #f57f17;
+  border: 1px solid #ffe082; border-radius: 4px; padding: 1px 5px;
+  font-weight: 700; margin-top: 3px; display: inline-block;
+}
+
+/* ══ PHOTO CARD ═══════════════════════════════════════════════════ */
+.photo-card {
+  background: white;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.07);
+}
+.photo-card-head {
+  padding: 13px 14px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.photo-card-icon {
+  width: 32px; height: 32px;
+  background: #e3f2fd; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0;
+}
+.photo-head-text { flex: 1; }
+.photo-head-text strong { font-size: 13px; font-weight: 700; color: var(--navy); display: block; }
+.photo-head-text span  { font-size: 11px; color: #aaa; }
+.photo-count-badge {
+  font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px;
+}
+.pneed { background: #fff3e0; color: var(--orange); }
+.pdone { background: #e8f5e9; color: var(--green); }
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 14px;
+}
+.photo-slot label {
+  font-size: 10px; font-weight: 700; color: #666;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  display: block; margin-bottom: 6px;
+}
+.upload-zone {
+  border: 2px dashed #d5d5d5;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fafafa;
+  position: relative;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.upload-zone.has-photo { border: 2px solid var(--teal); background: #fff; }
+.upload-zone input[type="file"] {
+  position: absolute; inset: 0;
+  opacity: 0; width: 100%; height: 100%;
+  cursor: pointer; z-index: 3;
+  font-size: 16px; /* prevent iOS zoom */
+}
+.upload-zone.has-photo input[type="file"] { display: none; } /* hide input when photo present — we handle tap manually */
+
+.upload-empty {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 5px;
+  padding: 16px 10px; pointer-events: none;
+}
+.upload-zone.has-photo .upload-empty { display: none; }
+.upload-empty .cam  { font-size: 26px; }
+.upload-empty .utxt { font-size: 12px; font-weight: 600; color: #666; }
+.upload-empty .usub { font-size: 10px; color: #bbb; }
+
+.photo-preview-wrap { display: none; width: 100%; position: relative; }
+.upload-zone.has-photo .photo-preview-wrap { display: block; }
+.photo-thumb {
+  width: 100%; aspect-ratio: 4/3;
+  object-fit: cover; display: block;
+  border-radius: 12px; cursor: pointer;
+}
+.photo-retake {
+  position: absolute; top: 7px; right: 7px;
+  background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+  color: white; border: none; border-radius: 20px;
+  padding: 4px 10px; font-size: 11px; font-weight: 700;
+  cursor: pointer; z-index: 5;
+}
+.photo-ok-tag {
+  position: absolute; bottom: 7px; left: 7px;
+  background: var(--teal); color: white;
+  border-radius: 20px; padding: 3px 8px;
+  font-size: 10px; font-weight: 700;
+}
+
+.photos-done-row {
+  display: none;
+  background: #e8f5e9;
+  border-top: 1px solid #c8e6c9;
+  padding: 11px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--green);
+  text-align: center;
+}
+.photos-done-row.show { display: block; }
+
+/* ── JE STATUS PANEL ──────────────────────────────────────────── */
+.je-panel {
+  display: none;
+  border-top: 1px solid #f0f0f0;
+  padding: 14px;
+}
+.je-panel.show { display: block; }
+
+.je-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.je-step:last-child { margin-bottom: 0; }
+.je-step .je-icon { font-size: 20px; flex-shrink: 0; }
+.je-step .je-text { flex: 1; }
+.je-step .je-sub  { font-size: 11px; font-weight: 400; color: #888; margin-top: 2px; }
+
+.je-step.waiting  { background: #f5f5f5; color: #aaa; }
+.je-step.loading  { background: #e3f2fd; color: #1565c0; }
+.je-step.done-step{ background: #e8f5e9; color: var(--green); }
+.je-step.error    { background: #ffebee; color: var(--red); }
+
+.je-spinner {
+  width: 18px; height: 18px;
+  border: 2.5px solid rgba(21,101,192,0.2);
+  border-top-color: #1565c0;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.je-retry-btn {
+  margin-top: 8px;
+  width: 100%;
+  padding: 10px;
+  background: white;
+  border: 1px solid #ffcdd2;
+  color: var(--red);
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.je-result-card {
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  border-radius: 14px;
+  padding: 16px;
+  color: white;
+  display: none;
+}
+.je-result-card.show { display: block; }
+.je-result-num { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: .5px; }
+.je-result-main { font-size: 18px; font-weight: 800; margin: 4px 0; color: var(--teal); }
+.je-result-lines { font-size: 11px; color: rgba(255,255,255,0.6); line-height: 1.8; margin-top: 8px; font-family: monospace; }
+
+/* ── SEND BUTTON ──────────────────────────────────────────────── */
+.send-btn-wrap {
+  padding: 0 14px 14px;
+  display: none;
+}
+.send-btn-wrap.show { display: block; }
+.send-btn {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #1565c0, #1976d2);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: opacity 0.2s;
+}
+.send-btn:active { opacity: 0.85; }
+.send-btn:disabled { background: #aaa; cursor: default; }
+.send-status {
+  text-align: center;
+  font-size: 12px;
+  color: #888;
+  margin-top: 8px;
+  min-height: 18px;
+}
+.send-status.ok   { color: var(--green); font-weight: 600; }
+.send-status.fail { color: var(--red);   font-weight: 600; }
+
+/* ══ NOTES ════════════════════════════════════════════════════════ */
+.notes-section {
+  background: white;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.07);
+  padding: 14px;
+}
+.notes-section label {
+  font-size: 11px; font-weight: 700; color: #888;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  display: block; margin-bottom: 7px;
+}
+.notes-section textarea {
+  width: 100%;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 11px;
+  font-size: 15px;
+  resize: none;
+  outline: none;
+  color: var(--navy);
+  font-family: inherit;
+  min-height: 80px;
+}
+.notes-section textarea:focus { border-color: var(--teal); }
+
+/* ══ ACTION BUTTONS ═══════════════════════════════════════════════ */
+.complete-btn {
+  width: 100%;
+  padding: 17px;
+  background: linear-gradient(135deg, var(--navy), #16213e);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: opacity 0.2s;
+}
+.complete-btn:active { opacity: 0.85; }
+.reset-btn {
+  width: 100%;
+  padding: 13px;
+  background: white;
+  color: #888;
+  border: 1px solid #e0e0e0;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.reset-btn:active { background: #f5f5f5; }
+
+/* ══ COMPLETION ═══════════════════════════════════════════════════ */
+.done-banner {
+  display: none;
+  background: linear-gradient(135deg, var(--teal), #00b894);
+  color: white;
+  padding: 22px;
+  border-radius: 14px;
+  text-align: center;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 20px rgba(0,201,167,0.25);
+}
+.done-banner h2 { font-size: 22px; margin-bottom: 6px; }
+.done-banner p  { font-size: 13px; opacity: 0.85; }
+
+.timestamp {
+  font-size: 11px; color: #bbb;
+  text-align: center; margin-top: 6px;
+}
+
+/* ══ SETTINGS MODAL ═══════════════════════════════════════════════ */
+.modal-bg {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 500; padding: 20px;
+  overflow-y: auto;
+  align-items: flex-start;
+  justify-content: center;
+}
+.modal-bg.open { display: flex; }
+.modal {
+  background: white;
+  border-radius: 18px;
+  width: 100%; max-width: 480px;
+  margin: auto;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+.modal-head {
+  padding: 18px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.modal-head h2 { font-size: 16px; font-weight: 700; }
+.modal-close {
+  background: #f5f5f5; border: none; border-radius: 8px;
+  width: 30px; height: 30px; font-size: 16px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.modal-body { padding: 20px; }
+.modal-footer {
+  padding: 14px 20px; border-top: 1px solid #f0f0f0;
+  display: flex; gap: 8px; justify-content: flex-end;
+}
+
+.field { margin-bottom: 14px; }
+.field label {
+  font-size: 11px; font-weight: 700; color: #666;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  display: block; margin-bottom: 5px;
+}
+.field input {
+  width: 100%;
+  border: 1px solid #e0e0e0;
+  border-radius: 9px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--navy);
+  outline: none;
+  font-family: inherit;
+}
+.field input:focus { border-color: var(--teal); }
+.field .hint { font-size: 11px; color: #aaa; margin-top: 4px; line-height: 1.5; }
+
+.setup-box {
+  background: #f0f7ff;
+  border-radius: 10px;
+  padding: 13px;
+  margin-bottom: 16px;
+  font-size: 12px;
+  color: #1565c0;
+  line-height: 1.7;
+}
+.setup-box strong { display: block; margin-bottom: 4px; font-size: 13px; }
+.setup-box a { color: #1565c0; font-weight: 700; }
+
+.btn-primary {
+  background: var(--navy); color: white;
+  border: none; border-radius: 9px;
+  padding: 10px 20px; font-size: 13px; font-weight: 700;
+  cursor: pointer;
+}
+.btn-outline {
+  background: white; color: #555;
+  border: 1px solid #ddd; border-radius: 9px;
+  padding: 10px 20px; font-size: 13px; font-weight: 600;
+  cursor: pointer;
+}
+
+/* ══ PHOTO VIEWER ═════════════════════════════════════════════════ */
+.viewer {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.93);
+  z-index: 999;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 20px;
+}
+.viewer.open { display: flex; }
+.viewer img {
+  max-width: 100%; max-height: 80vh;
+  border-radius: 10px; object-fit: contain;
+}
+.viewer-close {
+  background: rgba(255,255,255,0.15); color: white;
+  border: none; border-radius: 999px;
+  padding: 10px 28px; font-size: 14px; font-weight: 700;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<!-- ── Install tip (shown in regular browser, hidden after dismiss) ── -->
+<div class="install-banner" id="install-banner" style="display:none">
+  <span>📱 <strong>Add to home screen</strong> — tap Share → "Add to Home Screen" to use as an app</span>
+  <button class="install-dismiss" onclick="dismissInstall()">Got it</button>
+</div>
+
+<!-- ── Header ──────────────────────────────────────────────────── -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>📦 Delivery Checklist</h1>
+      <p>Woodhaven Cannabis</p>
+    </div>
+    <div style="display:flex;gap:6px;">
+      <a href="index.html" class="settings-btn" title="Home" style="text-decoration:none;">🏠</a>
+      <button class="settings-btn" onclick="openSettings()" title="Settings">⚙️</button>
+    </div>
+  </div>
+  <div class="meta-row">
+    <div class="meta-input">
+      <label>Vendor</label>
+      <input type="text" id="vendor" placeholder="e.g. Old Pal" autocomplete="off">
+    </div>
+    <div class="meta-input">
+      <label>Date</label>
+      <input type="date" id="del-date">
+    </div>
+    <div class="meta-input">
+      <label>Your Name</label>
+      <input type="text" id="employee" placeholder="Staff name" autocomplete="off">
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+  <div class="progress-label" id="progress-label">0 of 0 tasks complete</div>
+</div>
+
+<div class="content">
+
+  <div id="done-banner" class="done-banner">
+    <h2>✅ All Done!</h2>
+    <p>Delivery complete — owner has been notified.</p>
+  </div>
+
+  <!-- Section 1: METRC -->
+  <div class="section s1">
+    <div class="section-header">
+      <div class="sec-icon">🖥️</div>
+      <div class="sec-title">METRC — Accept Transfer</div>
+      <span class="sec-count" id="count-1"></span>
+    </div>
+    <div id="body-1">
+      <div class="task" onclick="toggle(this)">
+        <div class="chk"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5L5 9L12 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="task-text">Log into METRC</div></div>
+      </div>
+      <div class="task" onclick="toggle(this)">
+        <div class="chk"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5L5 9L12 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="task-text">Locate incoming transfer from vendor</div></div>
+      </div>
+      <div class="task" onclick="toggle(this)">
+        <div class="chk"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5L5 9L12 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="task-text">Verify all packages and quantities</div>
+          <div class="task-note">Must match physical count and manifest before accepting</div>
+          <span class="badge-compliance">COMPLIANCE</span>
+        </div>
+      </div>
+      <div class="task" onclick="toggle(this)">
+        <div class="chk"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5L5 9L12 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="task-text">Accept transfer in METRC</div>
+          <div class="task-note">All packages now in your METRC inventory</div>
+          <span class="badge-compliance">COMPLIANCE</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 2: POS -->
+  <div class="section s2">
+    <div class="section-header">
+      <div class="sec-icon">💳</div>
+      <div class="sec-title">POS System — Accept &amp; Price</div>
+      <span class="sec-count" id="count-2"></span>
+    </div>
+    <div id="body-2">
+      <div class="task" onclick="toggle(this)">
+        <div class="chk"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5L5 9L12 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="task-text">Log into POS (Alleaves / Sweed)</div></div>
+      </div>
+      <div class="task" onclick="toggle(this)">
+        <div class="chk"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5L5 9L12 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="task-text">Accept all packages in POS</div>
+          <div class="task-note">Match METRC package tags to POS entries</div>
+        </div>
+      </div>
+      <div class="task" onclick="toggle(this)">
+        <div class="chk"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5L5 9L12 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="task-text">Set prices for each product</div>
+          <div class="task-note">Confirm pricing with manager if unsure</div>
+        </div>
+      </div>
+      <div class="task" onclick="toggle(this)">
+        <div class="chk"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5L5 9L12 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="task-text">Set all packages active / on sales floor</div></div>
+      </div>
+      <div class="task" onclick="toggle(this)">
+        <div class="chk"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5L5 9L12 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="task-text">For new SKUs: create product listing in POS</div>
+          <div class="task-note">Add product name, category, THC/CBD info, and description</div>
+          <span class="badge-sku">NEW SKU ACTION</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PHOTO UPLOAD CARD ══════════════════════════════════════ -->
+  <div class="photo-card">
+    <div class="photo-card-head">
+      <div class="photo-card-icon">📸</div>
+      <div class="photo-head-text">
+        <strong>Invoice &amp; Manifest Photos</strong>
+        <span>Tap each box — camera or photo library</span>
+      </div>
+      <span class="photo-count-badge pneed" id="photo-badge">0 / 2</span>
+    </div>
+
+    <div class="photo-grid">
+      <!-- Invoice -->
+      <div class="photo-slot">
+        <label>📄 Invoice</label>
+        <div class="upload-zone" id="zone-invoice">
+          <input type="file" id="file-invoice" accept="image/*" onchange="handlePhoto('invoice',this)">
+          <div class="upload-empty">
+            <div class="cam">📷</div>
+            <div class="utxt">Tap to add</div>
+            <div class="usub">Camera or gallery</div>
+          </div>
+          <div class="photo-preview-wrap">
+            <img class="photo-thumb" id="thumb-invoice" src="" alt="Invoice" onclick="viewPhoto('invoice')">
+            <button class="photo-retake" onclick="retake('invoice')">↺ Retake</button>
+            <div class="photo-ok-tag">✓ Saved</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Manifest -->
+      <div class="photo-slot">
+        <label>📋 Manifest</label>
+        <div class="upload-zone" id="zone-manifest">
+          <input type="file" id="file-manifest" accept="image/*" onchange="handlePhoto('manifest',this)">
+          <div class="upload-empty">
+            <div class="cam">📷</div>
+            <div class="utxt">Tap to add</div>
+            <div class="usub">Camera or gallery</div>
+          </div>
+          <div class="photo-preview-wrap">
+            <img class="photo-thumb" id="thumb-manifest" src="" alt="Manifest" onclick="viewPhoto('manifest')">
+            <button class="photo-retake" onclick="retake('manifest')">↺ Retake</button>
+            <div class="photo-ok-tag">✓ Saved</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="photos-done-row" id="photos-done">
+      ✅ Both photos saved
+    </div>
+
+    <!-- ── JE Automation Panel ── -->
+    <div class="je-panel" id="je-panel">
+
+      <!-- Step 1: Read Invoice -->
+      <div class="je-step waiting" id="je-s1">
+        <span class="je-icon">🔍</span>
+        <div class="je-text">Reading invoice amount
+          <div class="je-sub">Claude AI will extract the total from your photo</div>
+        </div>
+      </div>
+
+      <!-- Step 2: Create JE -->
+      <div class="je-step waiting" id="je-s2">
+        <span class="je-icon">📒</span>
+        <div class="je-text">Creating QuickBooks Journal Entry
+          <div class="je-sub">Debit INVENTORY · Credit Accounts Payable</div>
+        </div>
+      </div>
+
+      <!-- Success card (hidden until done) -->
+      <div class="je-result-card" id="je-result">
+        <div class="je-result-num">QuickBooks Journal Entry Created</div>
+        <div class="je-result-main" id="je-result-main">JE #— · $—</div>
+        <div class="je-result-lines" id="je-result-lines"></div>
+      </div>
+
+      <!-- Retry button (shown on error) -->
+      <button class="je-retry-btn" id="je-retry" style="display:none" onclick="triggerJE()">↺ Retry Journal Entry</button>
+    </div>
+
+    <!-- Send to owner button -->
+    <div class="send-btn-wrap" id="send-wrap">
+      <button class="send-btn" id="send-btn" onclick="sendToOwner()">
+        📤 Send to Owner
+      </button>
+      <div class="send-status" id="send-status"></div>
+    </div>
+  </div>
+
+  <!-- Section 3: New SKU -->
+  <div class="section s3">
+    <div class="section-header">
+      <div class="sec-icon">🏷️</div>
+      <div class="sec-title">New SKU Setup</div>
+      <span class="sec-count" id="count-3"></span>
+    </div>
+    <div id="body-3">
+      <div class="task" onclick="toggle(this)">
+        <div class="chk"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5L5 9L12 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="task-text">Create container label for each new SKU</div>
+          <div class="task-note">Each container = 1 SKU — print and apply label before stocking</div>
+        </div>
+      </div>
+      <div class="task" onclick="toggle(this)">
+        <div class="chk"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5L5 9L12 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="task-text">Write or generate product description</div>
+          <div class="task-note">Terpenes, effects, flavor profile — for in-store display</div>
+          <span class="badge-sku">NEW SKU ACTION</span>
+        </div>
+      </div>
+      <div class="task" onclick="toggle(this)">
+        <div class="chk"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5L5 9L12 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="task-text">Place display sample on sales floor</div>
+          <div class="task-note">One sample container per new SKU for customer viewing</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 4: Website -->
+  <div class="section s4">
+    <div class="section-header">
+      <div class="sec-icon">🌐</div>
+      <div class="sec-title">Verify Website — woodhavencannabis.com</div>
+      <span class="sec-count" id="count-4"></span>
+    </div>
+    <div id="body-4">
+      <div class="task" onclick="toggle(this)">
+        <div class="chk"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5L5 9L12 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="task-text">Find all delivered products on website</div>
+          <div class="task-note">Allow 5–10 min after POS update for site to sync</div>
+        </div>
+      </div>
+      <div class="task" onclick="toggle(this)">
+        <div class="chk"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5L5 9L12 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="task-text">Verify THC % is correct for each product</div>
+          <div class="task-note">Cross-check against invoice / COA</div>
+          <span class="badge-compliance">COMPLIANCE</span>
+        </div>
+      </div>
+      <div class="task" onclick="toggle(this)">
+        <div class="chk"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5L5 9L12 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="task-text">Verify prices are correct on the website</div>
+          <div class="task-note">Must match what was set in POS</div>
+          <span class="badge-compliance">IMPORTANT</span>
+        </div>
+      </div>
+      <div class="task" onclick="toggle(this)">
+        <div class="chk"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5L5 9L12 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="task-text">Verify product names and photos look correct</div>
+          <div class="task-note">No placeholder images, typos, or wrong strain names</div>
+        </div>
+      </div>
+      <div class="task" onclick="toggle(this)">
+        <div class="chk"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5L5 9L12 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="task-text">Confirm all products show as "In Stock"</div>
+          <div class="task-note">If anything is missing, notify owner immediately</div>
+          <span class="badge-compliance">FINAL STEP</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notes -->
+  <div class="notes-section">
+    <label>📝 Delivery Notes / Discrepancies</label>
+    <textarea id="notes" placeholder="Any issues, missing items, damaged products, or anything the owner should know..."></textarea>
+  </div>
+
+  <button class="complete-btn" onclick="markComplete()">✅ Mark Delivery Complete</button>
+  <button class="reset-btn" onclick="resetAll()">🔄 Reset for Next Delivery</button>
+  <div class="timestamp" id="timestamp"></div>
+
+</div><!-- /content -->
+
+<!-- ══ SETTINGS MODAL ══════════════════════════════════════════════ -->
+<div class="modal-bg" id="settings-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>⚙️ Settings</h2>
+      <button class="modal-close" onclick="closeSettings()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- JE Automation section -->
+      <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px">⚡ Journal Entry Automation</div>
+      <div class="setup-box" style="background:#e8f5e9;color:#1b5e20;border-left:3px solid #2e7d32">
+        <strong>How it works</strong>
+        1. Run <code style="background:rgba(0,0,0,.1);padding:1px 5px;border-radius:4px">python je_server.py</code> on your Mac<br>
+        2. Find your Mac's IP: System Settings → Wi-Fi → Details → IP Address<br>
+        3. Paste it below as <code style="background:rgba(0,0,0,.1);padding:1px 5px;border-radius:4px">http://192.168.x.x:8080</code><br>
+        4. Done — invoice photo → Claude reads it → QuickBooks JE created automatically
+      </div>
+      <div class="field">
+        <label>Automation Server URL</label>
+        <input type="url" id="s-server" placeholder="http://192.168.1.5:8080">
+        <div class="hint">Leave blank to disable automatic Journal Entry creation</div>
+      </div>
+      <div style="height:1px;background:#f0f0f0;margin:16px 0"></div>
+
+      <!-- Completion Email section -->
+      <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px">📧 Completion Email Notification</div>
+      <div class="setup-box" style="background:#e8f5e9;color:#1b5e20;border-left:3px solid #2e7d32">
+        <strong>Setup (60 seconds — only 1 key needed!)</strong>
+        1. Go to <a href="https://web3forms.com" target="_blank">web3forms.com</a><br>
+        2. Enter <strong>woodhavencannabis@gmail.com</strong> and click "Create Access Key"<br>
+        3. Check your inbox → click the confirmation link<br>
+        4. Copy the Access Key and paste it below<br>
+        5. Done! Staff hit "Complete" → you get an email instantly
+      </div>
+
+      <div class="field">
+        <label>Web3Forms Access Key</label>
+        <input type="text" id="s-web3key" placeholder="e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+        <div class="hint">The key you get after confirming your email at web3forms.com</div>
+      </div>
+
+      <div style="height:1px;background:#f0f0f0;margin:16px 0"></div>
+
+      <!-- Photo in Email section -->
+      <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px">📸 Photos in Email</div>
+      <div class="setup-box" style="background:#e8f5e9;color:#1b5e20;border-left:3px solid #2e7d32">
+        <strong>See invoice &amp; manifest photos in the email</strong>
+        1. Go to <a href="https://api.imgbb.com/" target="_blank">api.imgbb.com</a> → sign up free<br>
+        2. Click "Get API key" on your dashboard<br>
+        3. Copy the API key and paste it below<br>
+        4. Done! Photos will appear as links in completion emails
+      </div>
+
+      <div class="field">
+        <label>ImgBB API Key</label>
+        <input type="text" id="s-imgbb" placeholder="e.g. abc123def456ghi789">
+        <div class="hint">Free at api.imgbb.com — photos upload automatically when you complete a delivery</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-outline" onclick="closeSettings()">Cancel</button>
+      <button class="btn-primary" onclick="saveSettings()">Save Settings</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PHOTO VIEWER ════════════════════════════════════════════════ -->
+<div class="viewer" id="viewer" onclick="closeViewer()">
+  <img id="viewer-img" src="" alt="">
+  <button class="viewer-close" onclick="closeViewer()">✕ Close</button>
+</div>
+
+<script>
+// ══ CONFIG ══════════════════════════════════════════════════════════
+const SECTIONS = 4;
+const PK = {
+  invoice:  'wh_photo_invoice',
+  manifest: 'wh_photo_manifest',
+  settings: 'wh_settings',
+  banner:   'wh_install_dismissed',
+};
+
+// ══ INSTALL BANNER ═══════════════════════════════════════════════════
+function showInstallBanner() {
+  // Only show in a browser (not standalone mode), and only if not dismissed
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+    || window.navigator.standalone;
+  if (!isStandalone && !localStorage.getItem(PK.banner)) {
+    document.getElementById('install-banner').style.display = 'flex';
+  }
+}
+function dismissInstall() {
+  localStorage.setItem(PK.banner, '1');
+  document.getElementById('install-banner').style.display = 'none';
+}
+
+// ══ SETTINGS ═════════════════════════════════════════════════════════
+function loadSettings() {
+  const s = JSON.parse(localStorage.getItem(PK.settings) || '{}');
+  document.getElementById('s-server').value   = s.serverUrl  || '';
+  document.getElementById('s-web3key').value  = s.web3key    || '';
+  document.getElementById('s-imgbb').value    = s.imgbbKey   || '';
+  return s;
+}
+function saveSettings() {
+  const s = {
+    serverUrl: document.getElementById('s-server').value.trim().replace(/\/$/, ''),
+    web3key:   document.getElementById('s-web3key').value.trim(),
+    imgbbKey:  document.getElementById('s-imgbb').value.trim(),
+  };
+  localStorage.setItem(PK.settings, JSON.stringify(s));
+  closeSettings();
+  alert('✅ Settings saved!');
+}
+function openSettings()  { loadSettings(); document.getElementById('settings-modal').classList.add('open'); }
+function closeSettings() { document.getElementById('settings-modal').classList.remove('open'); }
+
+// ══ CHECKLIST ════════════════════════════════════════════════════════
+function toggle(el) {
+  el.classList.toggle('done');
+  updateProgress();
+}
+
+function updateProgress() {
+  const all  = document.querySelectorAll('.task');
+  const done = document.querySelectorAll('.task.done');
+  const pct  = all.length ? Math.round((done.length / all.length) * 100) : 0;
+
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-label').textContent =
+    `${done.length} of ${all.length} tasks complete`;
+
+  for (let i = 1; i <= SECTIONS; i++) {
+    const sa = document.querySelectorAll(`#body-${i} .task`);
+    const sd = document.querySelectorAll(`#body-${i} .task.done`);
+    const el = document.getElementById(`count-${i}`);
+    if (el) {
+      el.textContent  = `${sd.length}/${sa.length}`;
+      el.style.color  = sd.length === sa.length ? 'var(--teal)' : '#888';
+    }
+  }
+
+  document.getElementById('done-banner').style.display =
+    (done.length === all.length && all.length > 0) ? 'block' : 'none';
+}
+
+async function markComplete() {
+  const completeBtn = document.querySelector('.complete-btn');
+  const all  = document.querySelectorAll('.task');
+  const done = document.querySelectorAll('.task.done');
+  // Gather delivery info
+  const vendor   = document.getElementById('vendor').value.trim()   || '(no vendor)';
+  const date     = document.getElementById('del-date').value        || new Date().toLocaleDateString();
+  const employee = document.getElementById('employee').value.trim() || '(no name)';
+  const notes    = document.getElementById('notes').value.trim()    || 'No notes.';
+
+  // Format date nicely
+  const dateLabel = date
+    ? new Date(date + 'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'})
+    : date;
+
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+
+  // Determine overall status
+  const isFullyComplete = done.length === all.length;
+  const hasInvoice  = !!localStorage.getItem(PK.invoice);
+  const hasManifest = !!localStorage.getItem(PK.manifest);
+  const statusLabel = isFullyComplete && hasInvoice && hasManifest
+    ? 'DELIVERY COMPLETED'
+    : 'DELIVERY STATUS UPDATE';
+
+  // Build section summary — show ✅ or ❌ per section, list missing tasks
+  const sectionNames = ['METRC — Accept Transfer', 'POS System — Accept & Price', 'New SKU Setup', 'Verify Website'];
+  let sectionSummary = '';
+  let missingTasks = '';
+  for (let i = 1; i <= SECTIONS; i++) {
+    const sa = document.querySelectorAll(`#body-${i} .task`);
+    const sd = document.querySelectorAll(`#body-${i} .task.done`);
+    const icon = sd.length === sa.length ? '✅' : '❌';
+    sectionSummary += `${icon} ${sectionNames[i-1]}: ${sd.length}/${sa.length}\n`;
+
+    // List unchecked tasks so owner knows exactly what's missing
+    if (sd.length < sa.length) {
+      const tasks = document.querySelectorAll(`#body-${i} .task:not(.done) .task-text`);
+      tasks.forEach(t => { missingTasks += `  • ${t.textContent}\n`; });
+    }
+  }
+
+  // Photo status
+  const photoStatus = [];
+  if (!hasInvoice)  photoStatus.push('Invoice');
+  if (!hasManifest) photoStatus.push('Manifest');
+  if (photoStatus.length) {
+    sectionSummary += `❌ Photos missing: ${photoStatus.join(', ')}\n`;
+  } else {
+    sectionSummary += `✅ Both photos uploaded\n`;
+  }
+
+  // Show sending state
+  completeBtn.disabled    = true;
+  completeBtn.textContent = '⏳ Sending status update…';
+
+  // Send completion email via Web3Forms
+  const s = JSON.parse(localStorage.getItem(PK.settings) || '{}');
+
+  if (s.web3key) {
+    try {
+      // ── Step 1: Upload photos to ImgBB (only if photos exist) ──
+      let invoiceUrl = '';
+      let manifestUrl = '';
+
+      const invData = localStorage.getItem(PK.invoice);
+      const manData = localStorage.getItem(PK.manifest);
+
+      if (s.imgbbKey && (invData || manData)) {
+        async function uploadToImgBB(base64Data, name) {
+          const raw = base64Data.split(',')[1];
+          const form = new FormData();
+          form.append('key', s.imgbbKey);
+          form.append('image', raw);
+          form.append('name', name);
+          const resp = await fetch('https://api.imgbb.com/1/upload', {
+            method: 'POST',
+            body: form,
+          });
+          const json = await resp.json();
+          if (json.success) return json.data.url;
+          throw new Error(json.error?.message || 'Upload failed');
+        }
+
+        completeBtn.textContent = '⏳ Uploading photos…';
+        const results = await Promise.allSettled([
+          invData ? uploadToImgBB(invData, `invoice-${vendor}-${date}`) : Promise.resolve(''),
+          manData ? uploadToImgBB(manData, `manifest-${vendor}-${date}`) : Promise.resolve(''),
+        ]);
+        invoiceUrl  = results[0].status === 'fulfilled' ? results[0].value : '';
+        manifestUrl = results[1].status === 'fulfilled' ? results[1].value : '';
+      }
+
+      // ── Step 2: Create QuickBooks Journal Entry (only if invoice photo exists) ──
+      let jeResult = null;
+      if (s.serverUrl && invData) {
+        completeBtn.textContent = '⏳ Creating QuickBooks Journal Entry…';
+        jeResult = await triggerJE();
+      }
+
+      // ── Step 3: Send completion email ──
+      completeBtn.textContent = '⏳ Sending completion email…';
+
+      // Build photo section for email
+      let photoSection = '';
+      if (invoiceUrl || manifestUrl) {
+        photoSection = '\n--- Photos ---\n';
+        if (invoiceUrl)  photoSection += `Invoice:  ${invoiceUrl}\n`;
+        if (manifestUrl) photoSection += `Manifest: ${manifestUrl}\n`;
+      } else if (!s.imgbbKey) {
+        photoSection = '\n(Photos not included — add ImgBB API key in Settings to attach photos)\n';
+      }
+
+      // Build QuickBooks JE section for email
+      let jeSection = '';
+      if (jeResult) {
+        jeSection = '\n--- QuickBooks Journal Entry ---\n';
+        jeSection += `JE #${jeResult.je_number}  ·  ${jeResult.amount_fmt}\n`;
+        jeSection += `Debit: ${jeResult.inv_account}\n`;
+        jeSection += `Credit: Accounts Payable (A/P)\n`;
+        jeSection += `Memo: ${jeResult.memo}\n`;
+        jeSection += `Status: ✅ Posted to QuickBooks\n`;
+      } else if (s.serverUrl) {
+        jeSection = '\n--- QuickBooks Journal Entry ---\n';
+        jeSection += `⚠️ JE creation failed — check je_server.py and retry manually\n`;
+      }
+
+      // Build email subject (include JE info if available)
+      const emailSubject = jeResult
+        ? `Delivery Complete — ${vendor} — ${dateLabel} — JE #${jeResult.je_number} (${jeResult.amount_fmt})`
+        : `Delivery Complete — ${vendor} — ${dateLabel}`;
+
+      const resp = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_key: s.web3key,
+          subject: emailSubject,
+          from_name: 'WH Delivery Checklist',
+          message: [
+            `DELIVERY COMPLETED at ${timeStr}`,
+            ``,
+            `Vendor: ${vendor}`,
+            `Date: ${dateLabel}`,
+            `Completed by: ${employee}`,
+            ``,
+            `--- Checklist Summary ---`,
+            sectionSummary,
+            `--- Notes ---`,
+            notes,
+            photoSection,
+            jeSection,
+          ].join('\n'),
+        }),
+      });
+
+      const result = await resp.json();
+      if (result.success) {
+        const jeBadge = jeResult ? ` + JE #${jeResult.je_number}` : '';
+        completeBtn.textContent = `✅ Complete — Email Sent!${jeBadge}`;
+        completeBtn.style.background = 'linear-gradient(135deg, var(--green), #43a047)';
+      } else {
+        throw new Error(result.message || 'Send failed');
+      }
+    } catch (err) {
+      console.error('Completion email error:', err);
+      completeBtn.textContent = '⚠️ Complete (email failed — check Settings)';
+      completeBtn.style.background = 'linear-gradient(135deg, var(--orange), #ef6c00)';
+      completeBtn.disabled = false;
+    }
+  } else {
+    // Web3Forms not configured — still mark complete but warn
+    completeBtn.textContent = '⚠️ Complete (email not configured — check Settings)';
+    completeBtn.style.background = 'linear-gradient(135deg, var(--orange), #ef6c00)';
+  }
+
+  document.getElementById('timestamp').textContent =
+    `Completed at ${timeStr} · ${now.toLocaleDateString()}`;
+  document.getElementById('done-banner').querySelector('p').textContent =
+    'Delivery complete — notification sent to woodhavencannabis@gmail.com';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetAll() {
+  if (!confirm('Reset for a new delivery? Clears all checkmarks, photos and notes.')) return;
+  document.querySelectorAll('.task').forEach(t => t.classList.remove('done'));
+  ['vendor','del-date','employee','notes'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  document.getElementById('del-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('timestamp').textContent = '';
+  clearPhoto('invoice');
+  clearPhoto('manifest');
+
+  // Reset Complete button to original state
+  const completeBtn = document.querySelector('.complete-btn');
+  completeBtn.disabled    = false;
+  completeBtn.textContent = '✅ Mark Delivery Complete';
+  completeBtn.style.background = 'linear-gradient(135deg, var(--navy), #16213e)';
+  document.getElementById('done-banner').querySelector('p').textContent =
+    'Delivery complete — owner has been notified.';
+
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ══ PHOTOS ═══════════════════════════════════════════════════════════
+function handlePhoto(type, input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      // Compress to max 1400px
+      const canvas = document.createElement('canvas');
+      const MAX = 1400;
+      let w = img.width, h = img.height;
+      if (w > MAX || h > MAX) {
+        if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+        else        { w = Math.round(w * MAX / h); h = MAX; }
+      }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const data = canvas.toDataURL('image/jpeg', 0.82);
+      try { localStorage.setItem(PK[type], data); } catch(_) {}
+      applyPhoto(type, data, true);  // true = auto-trigger JE if invoice
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function applyPhoto(type, dataUrl, autoJE = false) {
+  document.getElementById('zone-' + type).classList.add('has-photo');
+  document.getElementById('thumb-' + type).src = dataUrl;
+  updatePhotoBadge();
+  // JE now triggers automatically when staff hits "Complete" — no longer on upload
+}
+
+function retake(type) {
+  clearPhoto(type);
+  document.getElementById('file-' + type).click();
+}
+
+function clearPhoto(type) {
+  try { localStorage.removeItem(PK[type]); } catch(_) {}
+  document.getElementById('zone-' + type).classList.remove('has-photo');
+  document.getElementById('thumb-' + type).src = '';
+  const fi = document.getElementById('file-' + type);
+  if (fi) fi.value = '';
+  updatePhotoBadge();
+}
+
+function updatePhotoBadge() {
+  const hasI = !!localStorage.getItem(PK.invoice);
+  const hasM = !!localStorage.getItem(PK.manifest);
+  const n = (hasI ? 1 : 0) + (hasM ? 1 : 0);
+  const badge  = document.getElementById('photo-badge');
+  const done   = document.getElementById('photos-done');
+  const sendW  = document.getElementById('send-wrap');
+  const jePanel = document.getElementById('je-panel');
+  const status = document.getElementById('send-status');
+
+  badge.textContent = `${n} / 2`;
+  badge.className   = 'photo-count-badge ' + (n === 2 ? 'pdone' : 'pneed');
+  done.classList.toggle('show', n === 2);
+  sendW.classList.toggle('show', n === 2);
+  if (status) status.textContent = '';
+
+  // Show JE panel as soon as invoice is uploaded (don't need manifest to start)
+  const s = JSON.parse(localStorage.getItem(PK.settings) || '{}');
+  if (hasI && s.serverUrl) {
+    jePanel.classList.add('show');
+  }
+}
+
+// ══ JE AUTOMATION ════════════════════════════════════════════════════
+function jeStep(stepId, state, subText) {
+  const el = document.getElementById(stepId);
+  if (!el) return;
+  el.className = `je-step ${state}`;
+  const iconMap = {
+    waiting: { '1': '🔍', '2': '📒' },
+    loading: null,
+    'done-step': { '1': '✅', '2': '✅' },
+    error:   { '1': '❌', '2': '❌' },
+  };
+  const n = stepId.slice(-1);
+  if (state === 'loading') {
+    el.innerHTML = `<div class="je-spinner"></div><div class="je-text">${el.querySelector('.je-text')?.textContent || ''}${subText ? `<div class="je-sub">${subText}</div>` : ''}</div>`;
+  } else {
+    const icon = iconMap[state]?.[n] || (state === 'waiting' ? (n === '1' ? '🔍' : '📒') : '');
+    const mainText = n === '1' ? 'Reading invoice amount' : 'Creating QuickBooks Journal Entry';
+    const defaultSub = n === '1' ? 'Claude AI will extract the total from your photo' : 'Debit INVENTORY · Credit Accounts Payable';
+    el.innerHTML = `<span class="je-icon">${icon}</span><div class="je-text">${mainText}<div class="je-sub">${subText || defaultSub}</div></div>`;
+  }
+}
+
+async function triggerJE() {
+  const s = JSON.parse(localStorage.getItem(PK.settings) || '{}');
+  if (!s.serverUrl) return null;  // server not configured, skip silently
+
+  const invData = localStorage.getItem(PK.invoice);
+  if (!invData) return null;
+
+  const vendor   = document.getElementById('vendor').value.trim();
+  const date     = document.getElementById('del-date').value;
+  const employee = document.getElementById('employee').value.trim();
+  const notes    = document.getElementById('notes').value.trim();
+
+  if (!vendor) {
+    jeStep('je-s1', 'error', 'Enter the vendor name at the top first');
+    document.getElementById('je-panel').classList.add('show');
+    document.getElementById('je-retry').style.display = 'none';
+    document.getElementById('vendor').focus();
+    return null;
+  }
+
+  // Show panel
+  document.getElementById('je-panel').classList.add('show');
+  document.getElementById('je-result').classList.remove('show');
+  document.getElementById('je-retry').style.display = 'none';
+
+  // Step 1: Reading invoice
+  jeStep('je-s1', 'loading', 'Sending invoice photo to Claude AI…');
+  jeStep('je-s2', 'waiting');
+
+  let result;
+  try {
+    const resp = await fetch(`${s.serverUrl}/create-je`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ vendor, date, employee, notes, invoice_image: invData }),
+      signal: AbortSignal.timeout(60000),  // 60s timeout
+    });
+
+    result = await resp.json();
+  } catch (err) {
+    const msg = err.name === 'TimeoutError'
+      ? 'Request timed out — is je_server.py running on your Mac?'
+      : `Cannot reach server at ${s.serverUrl} — is je_server.py running?`;
+    jeStep('je-s1', 'error', msg);
+    jeStep('je-s2', 'waiting');
+    document.getElementById('je-retry').style.display = 'block';
+    return null;
+  }
+
+  if (!result.success) {
+    const failedStep = result.step === 'create_je' ? 'je-s2' : 'je-s1';
+    if (failedStep === 'je-s2') jeStep('je-s1', 'done-step', `Amount extracted: ${result.amount_fmt || '?'}`);
+    jeStep(failedStep, 'error', result.error || 'Something went wrong');
+    if (failedStep === 'je-s1') jeStep('je-s2', 'waiting');
+    document.getElementById('je-retry').style.display = 'block';
+    return null;
+  }
+
+  // ✅ Both steps done
+  jeStep('je-s1', 'done-step', `Amount extracted: ${result.amount_fmt}`);
+  jeStep('je-s2', 'done-step', `JE #${result.je_number} posted to QuickBooks`);
+
+  // Show result card
+  const card = document.getElementById('je-result');
+  document.getElementById('je-result-main').textContent =
+    `JE #${result.je_number}  ·  ${result.amount_fmt}`;
+  document.getElementById('je-result-lines').innerHTML =
+    `Debit &nbsp; ${result.inv_account}<br>` +
+    `Credit  Accounts Payable (A/P)<br>` +
+    `Memo: ${result.memo}  ·  Vendor: ${result.vendor}`;
+  card.classList.add('show');
+
+  // Also save to AP tracker in localStorage for the AP Manager
+  try {
+    const apEntries = JSON.parse(localStorage.getItem('apEntries') || '[]');
+    const vendors   = JSON.parse(localStorage.getItem('vendors')   || '[]');
+    const v = vendors.find(x =>
+      x.name.toLowerCase() === vendor.toLowerCase() ||
+      x.qbname?.toLowerCase() === vendor.toLowerCase()
+    );
+    if (v) {
+      const dueDate = new Date(date + 'T12:00:00');
+      dueDate.setDate(dueDate.getDate() + 30);
+      apEntries.push({
+        id:         Math.random().toString(36).slice(2),
+        vendorId:   v.id,
+        invoiceNum: result.je_number ? `JE-${result.je_number}` : '',
+        date,
+        dueDate:    dueDate.toISOString().split('T')[0],
+        amount:     result.amount,
+        status:     'unpaid',
+      });
+      localStorage.setItem('apEntries', JSON.stringify(apEntries));
+    }
+  } catch(_) {}
+
+  // Return the JE result so markComplete() can include it in the email
+  return result;
+}
+
+function viewPhoto(type) {
+  const src = localStorage.getItem(PK[type]);
+  if (!src) return;
+  document.getElementById('viewer-img').src = src;
+  document.getElementById('viewer').classList.add('open');
+}
+function closeViewer() {
+  document.getElementById('viewer').classList.remove('open');
+  document.getElementById('viewer-img').src = '';
+}
+
+// ══ SEND TO OWNER ══════════════════════════════════════════════════
+async function sendToOwner() {
+  const s = JSON.parse(localStorage.getItem(PK.settings) || '{}');
+  const statusEl = document.getElementById('send-status');
+  const btn      = document.getElementById('send-btn');
+
+  if (!s.web3key) {
+    alert('Please configure your Web3Forms Access Key first.\nTap ⚙️ in the top right corner.');
+    openSettings();
+    return;
+  }
+
+  const invData = localStorage.getItem(PK.invoice);
+  const manData = localStorage.getItem(PK.manifest);
+  if (!invData || !manData) {
+    alert('Both photos must be uploaded before sending.');
+    return;
+  }
+
+  const vendor   = document.getElementById('vendor').value   || '(no vendor)';
+  const date     = document.getElementById('del-date').value || new Date().toLocaleDateString();
+  const employee = document.getElementById('employee').value || '(no name)';
+  const notes    = document.getElementById('notes').value    || 'No notes.';
+
+  btn.disabled    = true;
+  btn.textContent = '⏳ Sending…';
+  statusEl.textContent = '';
+  statusEl.className   = 'send-status';
+
+  const dateLabel = date
+    ? new Date(date + 'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'})
+    : date;
+
+  try {
+    const resp = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        access_key: s.web3key,
+        subject: `Delivery Photos — ${vendor} — ${dateLabel}`,
+        from_name: 'WH Delivery Checklist',
+        message: `Vendor: ${vendor}\nDate: ${dateLabel}\nStaff: ${employee}\nNotes: ${notes}\n\nInvoice & manifest photos were uploaded on the device.`,
+      }),
+    });
+    const result = await resp.json();
+    if (result.success) {
+      btn.textContent      = '✅ Sent!';
+      statusEl.textContent = 'Notification emailed to owner';
+      statusEl.className   = 'send-status ok';
+    } else {
+      throw new Error(result.message || 'Send failed');
+    }
+  } catch (err) {
+    btn.disabled    = false;
+    btn.textContent = '📤 Send to Owner';
+    statusEl.textContent = '❌ Send failed — check Settings or internet connection';
+    statusEl.className   = 'send-status fail';
+    console.error('Send error:', err);
+  }
+}
+
+// ══ INIT ═══════════════════════════════════════════════════════════
+document.getElementById('del-date').value = new Date().toISOString().split('T')[0];
+
+// Restore photos
+['invoice','manifest'].forEach(type => {
+  const saved = localStorage.getItem(PK[type]);
+  if (saved) applyPhoto(type, saved);
+});
+
+updateProgress();
+updatePhotoBadge();
+showInstallBanner();
+</script>
+</body>
+</html>
